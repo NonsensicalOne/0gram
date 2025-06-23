@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        <%= user.username %> | 0gram
+    </title>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #f5f5f5;
+            --primary-color: #0095f6;
+            --border-color: #363636;
+            --card-bg: #1e1e1e;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 935px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .profile-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        @media (min-width: 768px) {
+            .profile-header {
+                flex-direction: row;
+                align-items: flex-start;
+            }
+        }
+
+        .profile-pic {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 30px;
+            border: 1px solid var(--border-color);
+        }
+
+        .profile-info {
+            flex: 1;
+            text-align: center;
+        }
+
+        @media (min-width: 768px) {
+            .profile-info {
+                text-align: left;
+            }
+        }
+
+        .username {
+            font-size: 28px;
+            font-weight: 300;
+            margin-bottom: 10px;
+        }
+
+        .bio {
+            margin: 15px 0;
+            line-height: 1.5;
+            white-space: pre-line;
+        }
+
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+        }
+
+        @media (min-width: 768px) {
+            .stats {
+                justify-content: flex-start;
+                gap: 40px;
+            }
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-count {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .bio-links {
+            margin-top: 15px;
+        }
+
+        .bio-link {
+            color: var(--primary-color);
+            text-decoration: none;
+            display: inline-block;
+            margin-right: 15px;
+            margin-bottom: 5px;
+        }
+
+        .media-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3px;
+            margin-top: 30px;
+        }
+
+        @media (min-width: 768px) {
+            .media-grid {
+                gap: 28px;
+            }
+        }
+
+        .media-item {
+            aspect-ratio: 1;
+            position: relative;
+            overflow: hidden;
+            background: var(--card-bg);
+        }
+
+        .media-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .related-profiles {
+            margin-top: 40px;
+        }
+
+        .related-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-color);
+            opacity: 0.8;
+        }
+
+        .related-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 15px;
+        }
+
+        .related-profile {
+            text-align: center;
+        }
+
+        .related-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 5px;
+            border: 1px solid var(--border-color);
+        }
+
+        .related-username {
+            font-size: 12px;
+            color: var(--text-color);
+            text-decoration: none;
+            display: block;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="profile-header">
+            <img src="/api/pfp/<%= user.username %>" alt="Profile Picture" class="profile-pic">
+            <div class="profile-info">
+                <h1 class="username">
+                    <%= user.username %>
+                </h1>
+
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-count">
+                            <%= user.edge_followed_by.count.toLocaleString() %>
+                        </div>
+                        <div class="stat-label">Followers</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-count">
+                            <%= user.edge_follow.count.toLocaleString() %>
+                        </div>
+                        <div class="stat-label">Following</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-count">
+                            <%= user.edge_owner_to_timeline_media.count.toLocaleString() %>
+                        </div>
+                        <div class="stat-label">Posts</div>
+                    </div>
+                </div>
+
+                <div class="bio">
+                    <%= user.biography %>
+                </div>
+
+                <% if (user.bio_links && user.bio_links.length > 0) { %>
+                    <div class="bio-links">
+                        <% user.bio_links.forEach(link => { %>
+                            <a href="<%= link.url %>" class="bio-link" target="_blank" rel="noopener noreferrer">
+                                <%= link.title %>
+                            </a>
+                        <% }); %>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+
+        <% if (user.edge_owner_to_timeline_media.edges.length > 0) { %>
+            <div class="media-grid">
+                <% user.edge_owner_to_timeline_media.edges.forEach(post => { %>
+                    <div class="media-item">
+                        <img src="/api/image?url=<%= encodeURIComponent(post.node.display_url) %>" alt="Post"
+                            loading="lazy">
+                    </div>
+                <% }); %>
+            </div>
+        <% } %>
+
+        <% if (user.edge_related_profiles.edges.length > 0) { %>
+            <div class="related-profiles">
+                <div class="related-title">Suggested for you</div>
+                <div class="related-grid">
+                    <% user.edge_related_profiles.edges.slice(0, 8).forEach(profile => { %>
+                        <div class="related-profile">
+                            <img src="/api/image?url=<%= encodeURIComponent(profile.node.profile_pic_url) %>"
+                                alt="<%= profile.node.username %>" class="related-avatar" loading="lazy">
+                            <a href="/<%= profile.node.username %>" class="related-username">
+                                <%= profile.node.username %>
+                            </a>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+        <% } %>
+    </div>
+</body>
+
+</html>

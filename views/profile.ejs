@@ -139,13 +139,72 @@
             position: relative;
             overflow: hidden;
             background: var(--card-bg);
+            cursor: pointer;
+            border-radius: 8px;
+            transition: transform 0.2s ease;
         }
 
-        .media-item img {
+        .media-item:hover {
+            transform: scale(1.02);
+        }
+
+        .media-item img,
+        .media-item video {
             width: 100%;
             height: 100%;
             object-fit: cover;
             border-radius: 8px;
+        }
+
+        .video-indicator {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            width: 24px;
+            height: 24px;
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+        }
+
+        .video-indicator::before {
+            content: '▶';
+        }
+
+        .load-more {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .load-more-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .load-more-btn:hover {
+            background: #007acc;
+        }
+
+        .load-more-btn:disabled {
+            background: var(--border-color);
+            cursor: not-allowed;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-color);
+            opacity: 0.6;
         }
 
         .related-profiles {
@@ -188,13 +247,88 @@
             text-overflow: ellipsis;
             white-space: nowrap;
         }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            max-width: 90vw;
+            max-height: 90vh;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .modal img,
+        .modal video {
+            width: 100%;
+            height: auto;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1001;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            opacity: 0.7;
+            background: rgba(0, 0, 0, 0.8);
+        }
+
+        .error-message {
+            text-align: center;
+            color: #ff4444;
+            padding: 20px;
+            margin: 20px 0;
+            background: rgba(255, 68, 68, 0.1);
+            border-radius: 8px;
+            border: 1px solid rgba(255, 68, 68, 0.3);
+        }
+
+        .no-posts {
+            text-align: center;
+            color: var(--text-color);
+            opacity: 0.6;
+            padding: 40px 20px;
+            font-size: 16px;
+        }
     </style>
 </head>
 
 <body>
     <div class="container">
         <div class="profile-header">
-            <img src="/api/pfp/<%= user.username %>" alt="Profile Picture" class="profile-pic">
+            <img src="/api/pfp/highres/<%= user.username %>" alt="Profile Picture" class="profile-pic" 
+                 onerror="this.src='/api/pfp/<%= user.username %>'">
             <div class="profile-info">
                 <h1 class="username">
                     <%= user.username %>
@@ -221,15 +355,17 @@
                     </div>
                 </div>
 
+                <% if (user.biography) { %>
                 <div class="bio">
                     <%= user.biography %>
                 </div>
+                <% } %>
 
                 <% if (user.bio_links && user.bio_links.length > 0) { %>
                     <div class="bio-links">
                         <% user.bio_links.forEach(link => { %>
                             <a href="<%= link.url %>" class="bio-link" target="_blank" rel="noopener noreferrer">
-                                <%= link.title %>
+                                <%= link.title || link.url %>
                             </a>
                         <% }); %>
                     </div>
@@ -237,18 +373,34 @@
             </div>
         </div>
 
-        <% if (user.edge_owner_to_timeline_media.edges.length > 0) { %>
-            <div class="media-grid">
-                <% user.edge_owner_to_timeline_media.edges.forEach(post => { %>
-                    <div class="media-item">
-                        <img src="/api/image?url=<%= encodeURIComponent(post.node.display_url) %>" alt="Post"
-                            loading="lazy">
+        <% if (user.edge_owner_to_timeline_media.count > 0) { %>
+            <% if (user.edge_owner_to_timeline_media.edges && user.edge_owner_to_timeline_media.edges.length > 0) { %>
+                <div class="media-grid" id="mediaGrid">
+                    <% user.edge_owner_to_timeline_media.edges.forEach(post => { %>
+                        <div class="media-item" onclick="openModal('<%= post.node.display_url %>', <%= post.node.is_video || false %>, '<%= post.node.video_url || "" %>')">
+                            <img src="/api/image?url=<%= encodeURIComponent(post.node.display_url) %>" alt="Post" loading="lazy">
+                            <% if (post.node.is_video) { %>
+                                <div class="video-indicator"></div>
+                            <% } %>
+                        </div>
+                    <% }); %>
+                </div>
+
+                <% if (user.edge_owner_to_timeline_media.page_info && user.edge_owner_to_timeline_media.page_info.has_next_page) { %>
+                    <div class="load-more">
+                        <button class="load-more-btn" id="loadMoreBtn" onclick="loadMorePosts()">Load More Posts</button>
+                        <div class="loading" id="loading" style="display: none;">Loading more posts...</div>
+                        <div class="error-message" id="errorMessage" style="display: none;"></div>
                     </div>
-                <% }); %>
-            </div>
+                <% } %>
+            <% } else { %>
+                <div class="no-posts">No posts available</div>
+            <% } %>
+        <% } else { %>
+            <div class="no-posts">This user hasn't posted anything yet</div>
         <% } %>
 
-        <% if (user.edge_related_profiles.edges.length > 0) { %>
+        <% if (user.edge_related_profiles && user.edge_related_profiles.edges && user.edge_related_profiles.edges.length > 0) { %>
             <div class="related-profiles">
                 <div class="related-title">Suggested for you</div>
                 <div class="related-grid">
@@ -265,6 +417,243 @@
             </div>
         <% } %>
     </div>
+
+    <!-- Modal for viewing media -->
+    <div id="mediaModal" class="modal" onclick="closeModal()">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <img id="modalImage" style="display: none;" alt="Full size post">
+            <video id="modalVideo" style="display: none;" controls preload="none">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+
+    <script>
+        let nextCursor = null;
+        let loading = false;
+        const username = '<%= user.username %>';
+
+        // Initialize pagination cursor from server data
+        <% if (user.edge_owner_to_timeline_media.page_info && user.edge_owner_to_timeline_media.page_info.has_next_page) { %>
+            nextCursor = '<%= user.edge_owner_to_timeline_media.page_info.end_cursor %>';
+        <% } %>
+
+        function openModal(imageUrl, isVideo, videoUrl) {
+            const modal = document.getElementById('mediaModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalVideo = document.getElementById('modalVideo');
+            
+            // Reset both elements
+            modalImage.style.display = 'none';
+            modalVideo.style.display = 'none';
+            modalVideo.pause();
+            modalVideo.src = '';
+            
+            if (isVideo && videoUrl) {
+                modalVideo.style.display = 'block';
+                modalVideo.src = '/api/image?url=' + encodeURIComponent(videoUrl);
+                modalVideo.load();
+            } else {
+                modalImage.style.display = 'block';
+                modalImage.src = '/api/image?url=' + encodeURIComponent(imageUrl);
+            }
+            
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('mediaModal');
+            const modalVideo = document.getElementById('modalVideo');
+            
+            modal.style.display = 'none';
+            modalVideo.pause();
+            modalVideo.src = '';
+            document.body.style.overflow = 'auto';
+        }
+
+        async function loadMorePosts() {
+            if (loading || !nextCursor) return;
+            
+            loading = true;
+            const loadMoreBtn = document.getElementById('loadMoreBtn');
+            const loadingDiv = document.getElementById('loading');
+            const errorDiv = document.getElementById('errorMessage');
+            
+            loadMoreBtn.style.display = 'none';
+            loadingDiv.style.display = 'block';
+            errorDiv.style.display = 'none';
+            
+            try {
+                const url = `/api/${username}/posts?after=${encodeURIComponent(nextCursor)}`;
+                console.log('Fetching:', url);
+                
+                const response = await fetch(url);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                console.log('Received data:', data);
+                
+                if (data.error) {
+                    throw new Error(data.error);
+                }
+                
+                if (data.posts && data.posts.length > 0) {
+                    const mediaGrid = document.getElementById('mediaGrid');
+                    
+                    data.posts.forEach(post => {
+                        const mediaItem = document.createElement('div');
+                        mediaItem.className = 'media-item';
+                        
+                        const displayUrl = post.display_url || post.thumbnail_url;
+                        const videoUrl = post.video_url || '';
+                        
+                        mediaItem.onclick = () => openModal(displayUrl, post.is_video, videoUrl);
+                        
+                        const img = document.createElement('img');
+                        img.src = '/api/image?url=' + encodeURIComponent(displayUrl);
+                        img.alt = 'Post';
+                        img.loading = 'lazy';
+                        
+                        mediaItem.appendChild(img);
+                        
+                        if (post.is_video) {
+                            const videoIndicator = document.createElement('div');
+                            videoIndicator.className = 'video-indicator';
+                            mediaItem.appendChild(videoIndicator);
+                        }
+                        
+                        mediaGrid.appendChild(mediaItem);
+                    });
+                    
+                    // Update cursor for next pagination
+                    nextCursor = data.nextCursor;
+                    
+                    if (data.hasMore && data.nextCursor) {
+                        loadMoreBtn.style.display = 'inline-block';
+                    } else {
+                        loadMoreBtn.textContent = 'No more posts to load';
+                        loadMoreBtn.disabled = true;
+                        loadMoreBtn.style.display = 'inline-block';
+                        nextCursor = null;
+                    }
+                } else {
+                    loadMoreBtn.textContent = 'No more posts to load';
+                    loadMoreBtn.disabled = true;
+                    loadMoreBtn.style.display = 'inline-block';
+                    nextCursor = null;
+                }
+            } catch (error) {
+                console.error('Error loading more posts:', error);
+                errorDiv.textContent = 'Error loading posts: ' + error.message;
+                errorDiv.style.display = 'block';
+                loadMoreBtn.textContent = 'Try Again';
+                loadMoreBtn.style.display = 'inline-block';
+            }
+            
+            loadingDiv.style.display = 'none';
+            loading = false;
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Handle clicks outside modal content
+        document.getElementById('mediaModal').addEventListener('click', function(event) {
+            if (event.target === this) {
+                closeModal();
+            }
+        });
+
+        // Prevent scrolling when modal is open
+        function preventScroll(e) {
+            e.preventDefault();
+        }
+
+        // Add scroll prevention when modal opens
+        function openModal(imageUrl, isVideo, videoUrl) {
+            const modal = document.getElementById('mediaModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalVideo = document.getElementById('modalVideo');
+            
+            // Reset both elements
+            modalImage.style.display = 'none';
+            modalVideo.style.display = 'none';
+            modalVideo.pause();
+            modalVideo.src = '';
+            
+            if (isVideo && videoUrl) {
+                modalVideo.style.display = 'block';
+                modalVideo.src = '/api/image?url=' + encodeURIComponent(videoUrl);
+                modalVideo.load();
+            } else {
+                modalImage.style.display = 'block';
+                modalImage.src = '/api/image?url=' + encodeURIComponent(imageUrl);
+            }
+            
+            modal.style.display = 'block';
+            document.body.style.overflow = 'hidden';
+            document.addEventListener('wheel', preventScroll, { passive: false });
+            document.addEventListener('touchmove', preventScroll, { passive: false });
+        }
+
+        // Remove scroll prevention when modal closes
+        function closeModal() {
+            const modal = document.getElementById('mediaModal');
+            const modalVideo = document.getElementById('modalVideo');
+            
+            modal.style.display = 'none';
+            modalVideo.pause();
+            modalVideo.src = '';
+            document.body.style.overflow = 'auto';
+            document.removeEventListener('wheel', preventScroll);
+            document.removeEventListener('touchmove', preventScroll);
+        }
+
+        // Handle image loading errors
+        document.addEventListener('DOMContentLoaded', function() {
+            const images = document.querySelectorAll('.media-item img');
+            images.forEach(img => {
+                img.addEventListener('error', function() {
+                    this.style.backgroundColor = computedStyle.getPropertyValue('--card-bg');;
+                    this.style.display = 'flex';
+                    this.style.alignItems = 'center';
+                    this.style.justifyContent = 'center';
+                    this.innerHTML = '<span style="color: var(--text-color); opacity: 0.5;">Failed to load</span>';
+                });
+            });
+        });
+
+        // Infinite scroll functionality
+        let isInfiniteScrollEnabled = false;
+        
+        function enableInfiniteScroll() {
+            if (isInfiniteScrollEnabled) return;
+            isInfiniteScrollEnabled = true;
+            
+            window.addEventListener('scroll', function() {
+                if (loading || !nextCursor) return;
+                
+                const scrollPosition = window.innerHeight + window.scrollY;
+                const threshold = document.body.offsetHeight - 1000; // Load when 1000px from bottom
+                
+                if (scrollPosition >= threshold) {
+                    loadMorePosts();
+                }
+            });
+        }
+
+        // Enable infinite scroll after initial load
+        setTimeout(enableInfiniteScroll, 1000);
+    </script>
 </body>
 
 </html>

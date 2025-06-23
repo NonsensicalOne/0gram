@@ -11,7 +11,7 @@ const headers = {
     'cache-control': 'no-cache',
     'pragma': 'no-cache',
     'priority': 'u=1, i',
-    'referer': 'https://www.instagram.com/ichisansfw/',
+    'referer': 'https://www.instagram.com/',
     'referrer-policy': 'strict-origin-when-cross-origin',
     'sec-ch-prefers-color-scheme': 'dark',
     'sec-fetch-dest': 'empty',
@@ -46,7 +46,6 @@ app.get('/api/pfp/:username', async (req, res) => {
             body: null
         });
 
-        // Check if response is JSON before parsing
         const contentType = response.headers.get('content-type') || '';
         if (!contentType.includes('application/json')) {
             const text = await response.text();
@@ -84,10 +83,9 @@ app.get('/api/pfp/highres/:username', async (req, res) => {
     const url = `https://www.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
 
     try {
-        // Get user profile info with Instagram API headers
         const response = await fetch(url, {
             method: "GET",
-            headers: headers, // Use your Instagram headers here
+            headers: headers,
             credentials: "include"
         });
 
@@ -95,7 +93,6 @@ app.get('/api/pfp/highres/:username', async (req, res) => {
             return res.status(response.status).send('User not found or API error');
         }
 
-        // Check if response is JSON before parsing
         const contentType = response.headers.get('content-type') || '';
         if (!contentType.includes('application/json')) {
             const text = await response.text();
@@ -104,7 +101,6 @@ app.get('/api/pfp/highres/:username', async (req, res) => {
 
         const info = await response.json();
 
-        // Check if user data exists
         if (!info.data || !info.data.user) {
             return res.status(404).send('User data not found');
         }
@@ -115,7 +111,6 @@ app.get('/api/pfp/highres/:username', async (req, res) => {
             return res.status(404).send('Profile picture URL not found');
         }
 
-        // Fetch image with minimal, clean headers
         const imageResponse = await fetch(profilePicUrl, {
             method: "GET",
             headers: headers
@@ -128,9 +123,7 @@ app.get('/api/pfp/highres/:username', async (req, res) => {
 
         const imageContentType = imageResponse.headers.get('content-type') || 'image/jpeg';
         res.setHeader('Content-Type', imageContentType);
-
-        // Optional: Add cache headers
-        res.setHeader('Cache-Control', 'public, max-age=3600'); // Cache for 1 hour
+        res.setHeader('Cache-Control', 'public, max-age=3600');
 
         const imageBuffer = await imageResponse.arrayBuffer();
         const buffer = Buffer.from(imageBuffer);
@@ -143,10 +136,9 @@ app.get('/api/pfp/highres/:username', async (req, res) => {
     }
 });
 
-// Image proxy endpoint to bypass Instagram CDN restrictions
 app.get('/api/image', async (req, res) => {
     const imageUrl = req.query.url;
-    
+
     if (!imageUrl) {
         return res.status(400).send('Image URL is required');
     }
@@ -177,6 +169,83 @@ app.get('/api/image', async (req, res) => {
     }
 });
 
+// Fixed pagination endpoint using GraphQL
+app.get('/api/:username/posts', async (req, res) => {
+    const username = req.params.username;
+    const after = req.query.after; // cursor for pagination
+
+    try {
+        // First get user ID from username
+        const profileUrl = `https://www.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
+        const profileResponse = await fetch(profileUrl, {
+            method: "GET",
+            headers: headers,
+            credentials: "include"
+        });
+
+        if (!profileResponse.ok) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const profileData = await profileResponse.json();
+        const userId = profileData.data.user.id;
+
+        // Build GraphQL query variables
+        const variables = {
+            id: userId,
+            first: 12
+        };
+
+        if (after) {
+            variables.after = after;
+        }
+
+        // Use GraphQL endpoint for pagination
+        const graphqlUrl = `https://www.instagram.com/graphql/query/?doc_id=7950326061742207&variables=${encodeURIComponent(JSON.stringify(variables))}`;
+
+        const response = await fetch(graphqlUrl, {
+            method: "GET",
+            headers: headers,
+            credentials: "include"
+        })
+
+        if (!response.ok) {
+            return res.status(response.status).json({ error: 'Failed to fetch posts' });
+        }
+
+        const contentType = response.headers.get('content-type') || '';
+        console.log(contentType)
+        if (!contentType.includes('application/json')) {
+            return res.status(500).json({ error: 'Invalid response format' });
+        }
+
+        const data = await response.json();
+
+        if (!data.data || !data.data.user || !data.data.user.edge_owner_to_timeline_media) {
+            return res.json({ posts: [], hasMore: false, nextCursor: null });
+        }
+
+        const mediaData = data.data.user.edge_owner_to_timeline_media;
+        const posts = mediaData.edges.map(edge => ({
+            id: edge.node.id,
+            display_url: edge.node.display_url,
+            is_video: edge.node.is_video || false,
+            video_url: edge.node.video_url || null,
+            thumbnail_url: edge.node.thumbnail_src || edge.node.display_url
+        }));
+
+        res.json({
+            posts: posts,
+            hasMore: mediaData.page_info.has_next_page,
+            nextCursor: mediaData.page_info.end_cursor
+        });
+
+    } catch (error) {
+        console.error("Error loading posts:", error);
+        res.status(500).json({ error: 'Failed to load posts' });
+    }
+});
+
 app.get('/:username', async (req, res) => {
     const username = req.params.username;
     const url = `https://www.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
@@ -188,17 +257,37 @@ app.get('/:username', async (req, res) => {
             credentials: "include",
         });
 
-        // Check if response is JSON before parsing
+        // Add the responseText variable here
+        const responseText = await response.text(); 
+
         const contentType = response.headers.get('content-type') || '';
+        console.log("Content-Type:", contentType);
+
         if (!contentType.includes('application/json')) {
-            const text = await response.text();
-            throw new Error(`Expected JSON but got ${contentType}: ${text.substring(0, 100)}`);
+            throw new Error(`Expected JSON but got ${contentType}: ${responseText.substring(0, 100)}`);
         }
 
-        const info = await response.json();
+        const info = JSON.parse(responseText);
+
+        const enhancedPosts = info.data.user.edge_owner_to_timeline_media.edges.map(edge => ({
+            ...edge,
+            node: {
+                ...edge.node,
+                is_video: edge.node.is_video || false,
+                video_url: edge.node.video_url || null
+            }
+        }));
+
+        const userData = {
+            ...info.data.user,
+            edge_owner_to_timeline_media: {
+                ...info.data.user.edge_owner_to_timeline_media,
+                edges: enhancedPosts
+            }
+        };
 
         res.render('profile.ejs', {
-            user: info.data.user,
+            user: userData,
             info: info
         });
     } catch (error) {

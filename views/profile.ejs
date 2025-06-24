@@ -48,7 +48,7 @@
                 align-items: flex-start;
             }
         }
-        
+
         .profile-pic-container {
             position: relative;
             width: 150px;
@@ -64,14 +64,15 @@
             border: 1px solid var(--border-color);
             background-color: var(--card-bg);
         }
-        
+
         .profile-pic-loader {
             position: absolute;
             top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
             width: 40px;
             height: 40px;
+            margin-top: -20px;
+            margin-left: -20px;
             border: 4px solid var(--border-color);
             border-top-color: var(--primary-color);
             border-radius: 50%;
@@ -167,14 +168,14 @@
         .media-item:hover {
             transform: scale(1.02);
         }
-        
+
         .media-item .failed-load {
-             color: var(--text-color);
-             opacity: 0.5;
-             display: flex;
-             align-items: center;
-             justify-content: center;
-             height: 100%;
+            color: var(--text-color);
+            opacity: 0.5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
         }
 
         .media-item img,
@@ -228,7 +229,7 @@
             background: var(--border-color);
             cursor: not-allowed;
         }
-        
+
         .loading-spinner {
             display: inline-block;
             width: 20px;
@@ -236,11 +237,13 @@
             border: 3px solid rgba(255, 255, 255, 0.3);
             border-radius: 50%;
             border-top-color: #fff;
-            animation: spin 1s ease-in-out infinite;
+            animation: spin 1s ease-out infinite;
         }
-        
+
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         .loading {
@@ -317,7 +320,7 @@
             align-items: center;
             justify-content: center;
         }
-        
+
         .modal-loader {
             width: 50px;
             height: 50px;
@@ -336,7 +339,8 @@
             max-height: 90vh;
             object-fit: contain;
             border-radius: 8px;
-            display: none; /* Hidden by default */
+            display: none;
+            /* Hidden by default */
         }
 
         .modal-close {
@@ -385,7 +389,7 @@
 <body>
     <div class="container">
         <div class="profile-header">
-             <div class="profile-pic-container">
+            <div class="profile-pic-container">
                 <div class="profile-pic-loader" id="pfpLoader"></div>
                 <img src="/api/pfp/highres/<%= user.username %>" alt="Profile Picture" class="profile-pic" id="pfpImage"
                     onerror="this.src='/api/pfp/<%= user.username %>'; this.onerror=null;"
@@ -418,68 +422,79 @@
                 </div>
 
                 <% if (user.biography) { %>
-                <div class="bio">
-                    <%- user.biography.replace(/\n/g, '<br>') %>
-                </div>
-                <% } %>
-
-                <% if (user.bio_links && user.bio_links.length > 0) { %>
-                    <div class="bio-links">
-                        <% user.bio_links.forEach(link => { %>
-                            <a href="<%= link.url %>" class="bio-link" target="_blank" rel="noopener noreferrer">
-                                <%= link.title || link.url %>
-                            </a>
-                        <% }); %>
+                    <div class="bio">
+                        <%- user.biography.replace(/\n/g, '<br>' ) %>
                     </div>
-                <% } %>
+                    <% } %>
+
+                        <% if (user.bio_links && user.bio_links.length> 0) { %>
+                            <div class="bio-links">
+                                <% user.bio_links.forEach(link=> { %>
+                                    <a href="<%= link.url %>" class="bio-link" target="_blank"
+                                        rel="noopener noreferrer">
+                                        <%= link.title || link.url %>
+                                    </a>
+                                    <% }); %>
+                            </div>
+                            <% } %>
             </div>
         </div>
 
-        <% if (user.edge_owner_to_timeline_media.count > 0) { %>
-            <% if (user.edge_owner_to_timeline_media.edges && user.edge_owner_to_timeline_media.edges.length > 0) { %>
+        <% if (user.edge_owner_to_timeline_media.count> 0) { %>
+            <% if (user.edge_owner_to_timeline_media.edges && user.edge_owner_to_timeline_media.edges.length> 0) { %>
                 <div class="media-grid" id="mediaGrid">
-                    <% user.edge_owner_to_timeline_media.edges.forEach(post => { %>
-                        <div class="media-item" onclick="openModal('<%= post.node.display_url %>', <%= post.node.is_video || false %>, '<%= post.node.video_url || '' %>')">
-                            <img src="/api/image?url=<%= encodeURIComponent(post.node.display_url) %>" alt="Post" loading="lazy">
+                    <% user.edge_owner_to_timeline_media.edges.forEach(post=> { %>
+                        <div class="media-item"
+                            onclick="openModal('<%= post.node.display_url %>', <%= post.node.is_video || false %>, '<%= post.node.video_url || '' %>')">
+                            <img src="/api/image?url=<%= encodeURIComponent(post.node.display_url) %>" alt="Post"
+                                loading="lazy">
                             <% if (post.node.is_video) { %>
                                 <div class="video-indicator"></div>
-                            <% } %>
+                                <% } %>
                         </div>
-                    <% }); %>
+                        <% }); %>
                 </div>
 
-                <% if (user.edge_owner_to_timeline_media.page_info && user.edge_owner_to_timeline_media.page_info.has_next_page) { %>
+                <% if (user.edge_owner_to_timeline_media.page_info &&
+                    user.edge_owner_to_timeline_media.page_info.has_next_page) { %>
                     <div class="load-more">
-                        <button class="load-more-btn" id="loadMoreBtn" onclick="loadMorePosts()" style="display: none;">Load More Posts</button>
-                        <div class="loading" id="loadingIndicator" style="display: none;"><div class="loading-spinner"></div></div>
+                        <button class="load-more-btn" id="loadMoreBtn" onclick="loadMorePosts()"
+                            style="display: none;">Load More Posts</button>
+                        <div class="loading" id="loadingIndicator" style="display: none;">
+                            <div class="loading-spinner"></div>
+                        </div>
                         <div class="error-message" id="errorMessage" style="display: none;"></div>
                     </div>
-                <% } %>
-            <% } else { %>
-                <div class="no-posts">No posts available</div>
-            <% } %>
-        <% } else { %>
-            <div class="no-posts">This user hasn't posted anything yet</div>
-        <% } %>
+                    <% } %>
+                        <% } else { %>
+                            <div class="no-posts">No posts available</div>
+                            <% } %>
+                                <% } else { %>
+                                    <div class="no-posts">This user hasn't posted anything yet</div>
+                                    <% } %>
 
-        <% if (user.edge_related_profiles && user.edge_related_profiles.edges && user.edge_related_profiles.edges.length > 0) { %>
-            <div class="related-profiles">
-                <div class="related-title">Suggested for you</div>
-                <div class="related-grid">
-                    <% user.edge_related_profiles.edges.slice(0, 8).forEach(profile => { %>
-                        <div class="related-profile">
-                            <a href="/<%= profile.node.username %>">
-                                <img src="/api/image?url=<%= encodeURIComponent(profile.node.profile_pic_url) %>"
-                                    alt="<%= profile.node.username %>" class="related-avatar" loading="lazy">
-                            </a>
-                            <a href="/<%= profile.node.username %>" class="related-username">
-                                <%= profile.node.username %>
-                            </a>
-                        </div>
-                    <% }); %>
-                </div>
-            </div>
-        <% } %>
+                                        <% if (user.edge_related_profiles && user.edge_related_profiles.edges &&
+                                            user.edge_related_profiles.edges.length> 0) { %>
+                                            <div class="related-profiles">
+                                                <div class="related-title">Suggested for you</div>
+                                                <div class="related-grid">
+                                                    <% user.edge_related_profiles.edges.slice(0, 8).forEach(profile=> {
+                                                        %>
+                                                        <div class="related-profile">
+                                                            <a href="/<%= profile.node.username %>">
+                                                                <img src="/api/image?url=<%= encodeURIComponent(profile.node.profile_pic_url) %>"
+                                                                    alt="<%= profile.node.username %>"
+                                                                    class="related-avatar" loading="lazy">
+                                                            </a>
+                                                            <a href="/<%= profile.node.username %>"
+                                                                class="related-username">
+                                                                <%= profile.node.username %>
+                                                            </a>
+                                                        </div>
+                                                        <% }); %>
+                                                </div>
+                                            </div>
+                                            <% } %>
     </div>
 
     <div id="mediaModal" class="modal">
@@ -524,13 +539,13 @@
             // Show modal and loader
             modal.style.display = 'block';
             modalLoader.style.display = 'block';
-            
+
             // Hide media elements initially
             modalImage.style.display = 'none';
             modalVideo.style.display = 'none';
             modalVideo.pause();
             modalVideo.currentTime = 0;
-            
+
             // Function to run when media is loaded
             const onMediaLoaded = () => {
                 modalLoader.style.display = 'none';
@@ -541,7 +556,7 @@
                     modalImage.style.display = 'block';
                 }
             };
-            
+
             if (isVideo && videoUrl) {
                 modalVideo.src = '/api/image?url=' + encodeURIComponent(videoUrl);
                 modalVideo.onloadeddata = onMediaLoaded;
@@ -549,7 +564,7 @@
                 modalImage.src = '/api/image?url=' + encodeURIComponent(imageUrl);
                 modalImage.onload = onMediaLoaded;
             }
-            
+
             // Prevent body scroll
             document.body.style.overflow = 'hidden';
             document.addEventListener('wheel', preventScroll, { passive: false });
@@ -558,7 +573,7 @@
 
         function closeModal() {
             modal.style.display = 'none';
-            
+
             // Stop video and clear src to prevent background playback
             modalVideo.pause();
             modalVideo.src = '';
@@ -573,56 +588,56 @@
         // --- Data Loading Logic ---
         async function loadMorePosts() {
             if (isLoading || !nextCursor) return;
-            
+
             isLoading = true;
             loadingIndicator.style.display = 'block';
             loadMoreBtn.style.display = 'none';
             errorDiv.style.display = 'none';
-            
+
             try {
                 const url = `/api/${username}/posts?after=${encodeURIComponent(nextCursor)}`;
                 const response = await fetch(url);
-                
+
                 if (!response.ok) {
                     throw new Error(`Server responded with status ${response.status}`);
                 }
-                
+
                 const data = await response.json();
-                
+
                 if (data.error) {
                     throw new Error(data.error);
                 }
-                
+
                 if (data.posts && data.posts.length > 0) {
                     const fragment = document.createDocumentFragment();
-                    
+
                     data.posts.forEach(post => {
                         const mediaItem = document.createElement('div');
                         mediaItem.className = 'media-item';
-                        
+
                         const displayUrl = post.display_url || post.thumbnail_url;
                         const videoUrl = post.video_url || '';
-                        
+
                         mediaItem.onclick = () => openModal(displayUrl, post.is_video, videoUrl);
-                        
+
                         const img = document.createElement('img');
                         img.src = '/api/image?url=' + encodeURIComponent(displayUrl);
                         img.alt = 'Post';
                         img.loading = 'lazy';
-                        
+
                         mediaItem.appendChild(img);
-                        
+
                         if (post.is_video) {
                             const videoIndicator = document.createElement('div');
                             videoIndicator.className = 'video-indicator';
                             mediaItem.appendChild(videoIndicator);
                         }
-                        
+
                         fragment.appendChild(mediaItem);
                     });
-                    
+
                     mediaGrid.appendChild(fragment);
-                    
+
                     nextCursor = data.nextCursor;
                     if (!data.hasMore) {
                         nextCursor = null;
@@ -650,10 +665,10 @@
         // --- Infinite Scroll Logic ---
         function handleInfiniteScroll() {
             if (isLoading || !nextCursor) return;
-            
+
             const scrollPosition = window.innerHeight + window.scrollY;
             const threshold = document.body.offsetHeight - 1000;
-            
+
             if (scrollPosition >= threshold) {
                 loadMorePosts();
             }
@@ -668,7 +683,7 @@
                     const img = event.target;
                     const parent = img.parentElement;
                     const rootStyles = getComputedStyle(document.documentElement);
-                    
+
                     parent.style.backgroundColor = rootStyles.getPropertyValue('--card-bg').trim();
                     parent.innerHTML = '<div class="failed-load">Failed to load</div>';
                 }

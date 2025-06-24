@@ -7,25 +7,30 @@ app.set('view engine', 'ejs')
 
 const headers = {
     'accept': '*/*',
-    'accept-language': 'en-EN,en;q=0.9',
+    'accept-language': 'tr-TR,tr;q=0.9',
     'cache-control': 'no-cache',
     'pragma': 'no-cache',
     'priority': 'u=1, i',
-    'referer': 'https://www.instagram.com/',
-    'referrer-policy': 'strict-origin-when-cross-origin',
+    'referer': 'https://www.instagram.com/ichisansfw/',
     'sec-ch-prefers-color-scheme': 'dark',
+    'sec-ch-ua': '"Google Chrome";v="137", "Chromium";v="137", "Not/A)Brand";v="24"',
+    'sec-ch-ua-full-version-list': '"Google Chrome";v="137.0.7151.120", "Chromium";v="137.0.7151.120", "Not/A)Brand";v="24.0.0.0"',
+    'sec-ch-ua-mobile': '?1',
+    'sec-ch-ua-model': '"Nexus 5"',
+    'sec-ch-ua-platform': '"Android"',
+    'sec-ch-ua-platform-version': '"6.0"',
     'sec-fetch-dest': 'empty',
     'sec-fetch-mode': 'cors',
     'sec-fetch-site': 'same-origin',
-    'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36',
+    'user-agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36',
     'x-asbd-id': '359341',
-    'x-csrftoken': 'il6pGNJLEGdk530QVw0aOa',
+    'x-csrftoken': 'ipOmG_DLfBevYqVERlbQ1d',
     'x-ig-app-id': '936619743392459',
     'x-ig-www-claim': '0',
     'x-requested-with': 'XMLHttpRequest',
-    'x-web-device-id': 'BC826045-5B1C-42AB-844C-75EC18F994B9',
-    'x-web-session-id': '6p2fr5:e9pqib:azmcve',
-    'cookie': 'csrftoken=il6pGNJLEGdk530QVw0aOa; datr=ucdZaMMBAyu8mLjEuKSFHus5; ig_did=BC826045-5B1C-42AB-844C-75EC18F994B9; ps_l=1; ps_n=1; ig_nrcb=1; wd=912x1368; dpr=2.0000000298023224; mid=aFnHvgALAAGK3J3gqfodr1vJ_bBM'
+    'x-web-device-id': 'D44AFF13-2435-4584-9DDD-5DB75B20BDD2',
+    'x-web-session-id': 'sidgh9:agcn37:xaiprc',
+    'cookie': 'csrftoken=ipOmG_DLfBevYqVERlbQ1d; datr=tRJbaKMXIBVuZpT3p9opHEOI; ig_did=D44AFF13-2435-4584-9DDD-5DB75B20BDD2'
 };
 
 app.get('/', (req, res) => {
@@ -248,6 +253,7 @@ app.get('/api/:username/posts', async (req, res) => {
 
 app.get('/:username', async (req, res) => {
     const username = req.params.username;
+
     const url = `https://www.instagram.com/api/v1/users/web_profile_info/?username=${username}`;
 
     try {
@@ -258,7 +264,7 @@ app.get('/:username', async (req, res) => {
         });
 
         // Add the responseText variable here
-        const responseText = await response.text(); 
+        const responseText = await response.text();
 
         const contentType = response.headers.get('content-type') || '';
         console.log("Content-Type:", contentType);
@@ -268,6 +274,8 @@ app.get('/:username', async (req, res) => {
         }
 
         const info = JSON.parse(responseText);
+
+        console.log(info);
 
         const enhancedPosts = info.data.user.edge_owner_to_timeline_media.edges.map(edge => ({
             ...edge,
@@ -296,6 +304,26 @@ app.get('/:username', async (req, res) => {
     }
 });
 
+app.get('/favicon.ico', async (req, res) => {
+    res.sendFile('favicon.ico')
+})
+
 app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
+    const colors = {
+        reset: '\x1b[0m',
+        red: '\x1b[31m',
+        green: '\x1b[32m',
+        yellow: '\x1b[33m',
+        blue: '\x1b[34m',
+        magenta: '\x1b[35m',
+        cyan: '\x1b[36m',
+        white: '\x1b[37m'
+    };
+
+    console.log(`${colors.cyan}
+╔═══════════════════════════════════════╗
+║                  0GRAM                ║
+╚═══════════════════════════════════════╝${colors.reset}
+
+running on port: ${port}`);
 });

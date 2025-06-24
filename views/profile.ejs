@@ -391,9 +391,11 @@
         <div class="profile-header">
             <div class="profile-pic-container">
                 <div class="profile-pic-loader" id="pfpLoader"></div>
-                <img src="/api/pfp/highres/<%= user.username %>" alt="Profile Picture" class="profile-pic" id="pfpImage"
-                    onerror="this.src='/api/pfp/<%= user.username %>'; this.onerror=null;"
-                    onload="document.getElementById('pfpLoader').style.display = 'none';">
+                <a href="/api/image?url=<%= encodeURIComponent(user.profile_pic_url_hd) %>">
+                    <img src="/api/image?url=<%= encodeURIComponent(user.profile_pic_url) %>" alt="Profile Picture"
+                        class="profile-pic" id="pfpImage"
+                        onload="document.getElementById('pfpLoader').style.display='none';">
+                </a>
             </div>
             <div class="profile-info">
                 <h1 class="username">

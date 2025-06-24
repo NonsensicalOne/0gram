@@ -9,6 +9,8 @@ const headers = {
     'accept': '*/*',
     'accept-language': 'tr-TR,tr;q=0.9',
     'cache-control': 'no-cache',
+    'content-type': 'application/x-www-form-urlencoded',
+    'origin': 'https://www.instagram.com',
     'pragma': 'no-cache',
     'priority': 'u=1, i',
     'referer': 'https://www.instagram.com/ichisansfw/',
@@ -25,12 +27,10 @@ const headers = {
     'user-agent': 'Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Mobile Safari/537.36',
     'x-asbd-id': '359341',
     'x-csrftoken': 'ipOmG_DLfBevYqVERlbQ1d',
-    'x-ig-app-id': '936619743392459',
-    'x-ig-www-claim': '0',
-    'x-requested-with': 'XMLHttpRequest',
-    'x-web-device-id': 'D44AFF13-2435-4584-9DDD-5DB75B20BDD2',
-    'x-web-session-id': 'sidgh9:agcn37:xaiprc',
-    'cookie': 'csrftoken=ipOmG_DLfBevYqVERlbQ1d; datr=tRJbaKMXIBVuZpT3p9opHEOI; ig_did=D44AFF13-2435-4584-9DDD-5DB75B20BDD2'
+    'x-fb-friendly-name': 'PolarisSettingsActionLogoutUtilsMutation',
+    'x-fb-lsd': 'US882xjmma0NmLDPpJzg_a',
+    'x-ig-app-id': '1217981644879628',
+    'cookie': 'datr=tRJbaKMXIBVuZpT3p9opHEOI; ig_did=D44AFF13-2435-4584-9DDD-5DB75B20BDD2; ig_nrcb=1; mid=aFsSwAABAAEVs5McpdXB_Sq0uZod; wd=1198x1384; dpr=2.0000000298023224; rur="CLN\\05475515250335\\0541782335752:01febbd9a7290dd04a10c328ce4e2adf1170ce41fe0d61cd398a6857e18a3e06255ff6e1"',
 };
 
 app.get('/', (req, res) => {

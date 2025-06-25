@@ -2,715 +2,703 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        <%= user.username %> | 0gram
-    </title>
-    <style>
-        :root {
-            --bg-color: #121212;
-            --text-color: #f5f5f5;
-            --primary-color: #0095f6;
-            --border-color: #363636;
-            --card-bg: #1e1e1e;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>
+    <%= user.username %> | 0gram
+  </title>
+  <style>
+    :root {
+      --bg-color: #121212;
+      --text-color: #f5f5f5;
+      --primary-color: #0095f6;
+      --border-color: #363636;
+      --card-bg: #1e1e1e;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-        }
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-color);
+    }
 
-        .container {
-            max-width: 935px;
-            margin: 0 auto;
-            padding: 20px;
-        }
+    .container {
+      max-width: 935px;
+      margin: 0 auto;
+      padding: 20px;
+    }
 
-        .profile-header {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 30px 0;
-            border-bottom: 1px solid var(--border-color);
-        }
+    .profile-header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 0;
+      border-bottom: 1px solid var(--border-color);
+    }
 
-        @media (min-width: 768px) {
-            .profile-header {
-                flex-direction: row;
-                align-items: flex-start;
-            }
-        }
+    @media (min-width: 768px) {
+      .profile-header {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+    }
 
-        .profile-pic-container {
-            position: relative;
-            width: 150px;
-            height: 150px;
-            margin-right: 30px;
-        }
+    .profile-pic-container {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin-right: 30px;
+    }
 
-        .profile-pic {
-            width: 100%;
-            height: 100%;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1px solid var(--border-color);
-            background-color: var(--card-bg);
-        }
+    .profile-pic {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid var(--border-color);
+      background-color: var(--card-bg);
+    }
 
-        .profile-pic-loader {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 40px;
-            height: 40px;
-            margin-top: -20px;
-            margin-left: -20px;
-            border: 4px solid var(--border-color);
-            border-top-color: var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
+    .profile-pic-loader {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 40px;
+      height: 40px;
+      margin-top: -20px;
+      margin-left: -20px;
+      border: 4px solid var(--border-color);
+      border-top-color: var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
 
-        .profile-info {
-            flex: 1;
-            text-align: center;
-        }
+    .profile-info {
+      flex: 1;
+      text-align: center;
+    }
 
-        @media (min-width: 768px) {
-            .profile-info {
-                text-align: left;
-            }
-        }
+    @media (min-width: 768px) {
+      .profile-info {
+        text-align: left;
+      }
+    }
 
-        .username {
-            font-size: 28px;
-            font-weight: 300;
-            margin-bottom: 10px;
-        }
+    .username {
+      font-size: 28px;
+      font-weight: 300;
+      margin-bottom: 10px;
+    }
 
-        .bio {
-            margin: 15px 0;
-            line-height: 1.5;
-            white-space: pre-line;
-        }
+    .bio {
+      margin: 15px 0;
+      line-height: 1.5;
+      white-space: pre-line;
+    }
 
-        .stats {
-            display: flex;
-            justify-content: space-around;
-            margin: 20px 0;
-        }
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+    }
 
-        @media (min-width: 768px) {
-            .stats {
-                justify-content: flex-start;
-                gap: 40px;
-            }
-        }
+    @media (min-width: 768px) {
+      .stats {
+        justify-content: flex-start;
+        gap: 40px;
+      }
+    }
 
-        .stat {
-            text-align: center;
-        }
+    .stat {
+      text-align: center;
+    }
 
-        .stat-count {
-            font-weight: 600;
-            font-size: 16px;
-        }
+    .stat-count {
+      font-weight: 600;
+      font-size: 16px;
+    }
 
-        .stat-label {
-            font-size: 14px;
-            color: var(--text-color);
-            opacity: 0.8;
-        }
+    .stat-label {
+      font-size: 14px;
+      color: var(--text-color);
+      opacity: 0.8;
+    }
 
-        .bio-links {
-            margin-top: 15px;
-        }
+    .bio-links {
+      margin-top: 15px;
+    }
 
-        .bio-link {
-            color: var(--primary-color);
-            text-decoration: none;
-            display: inline-block;
-            margin-right: 15px;
-            margin-bottom: 5px;
-        }
+    .bio-link {
+      color: var(--primary-color);
+      text-decoration: none;
+      display: inline-block;
+      margin-right: 15px;
+      margin-bottom: 5px;
+    }
 
-        .media-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 3px;
-            margin-top: 30px;
-        }
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 3px;
+      margin-top: 30px;
+    }
 
-        @media (min-width: 768px) {
-            .media-grid {
-                gap: 28px;
-            }
-        }
+    @media (min-width: 768px) {
+      .media-grid {
+        gap: 28px;
+      }
+    }
 
-        .media-item {
-            aspect-ratio: 1;
-            position: relative;
-            overflow: hidden;
-            background: var(--card-bg);
-            cursor: pointer;
-            border-radius: 8px;
-            transition: transform 0.2s ease;
-        }
+    .media-item {
+      aspect-ratio: 1;
+      position: relative;
+      overflow: hidden;
+      background: var(--card-bg);
+      cursor: pointer;
+      border-radius: 8px;
+      transition: transform 0.2s ease;
+    }
 
-        .media-item:hover {
-            transform: scale(1.02);
-        }
+    .media-item:hover {
+      transform: scale(1.02);
+    }
 
-        .media-item .failed-load {
-            color: var(--text-color);
-            opacity: 0.5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-        }
+    .media-item .failed-load {
+      color: var(--text-color);
+      opacity: 0.5;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+    }
 
-        .media-item img,
-        .media-item video {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 8px;
-        }
+    .media-item img,
+    .media-item video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 8px;
+    }
 
-        .video-indicator {
-            position: absolute;
-            top: 8px;
-            right: 8px;
-            width: 24px;
-            height: 24px;
-            background: rgba(0, 0, 0, 0.8);
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 12px;
-        }
+    .video-indicator {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      width: 24px;
+      height: 24px;
+      background: rgba(0, 0, 0, 0.8);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 12px;
+    }
 
-        .video-indicator::before {
-            content: '▶';
-        }
+    .video-indicator::before {
+      content: '▶';
+    }
 
-        .load-more {
-            text-align: center;
-            margin: 40px 0;
-        }
+    .load-more {
+      text-align: center;
+      margin: 40px 0;
+    }
 
-        .load-more-btn {
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            font-size: 14px;
-            cursor: pointer;
-            transition: background 0.2s;
-        }
+    .load-more-btn {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
 
-        .load-more-btn:hover {
-            background: #007acc;
-        }
+    .load-more-btn:hover {
+      background: #007acc;
+    }
 
-        .load-more-btn:disabled {
-            background: var(--border-color);
-            cursor: not-allowed;
-        }
+    .load-more-btn:disabled {
+      background: var(--border-color);
+      cursor: not-allowed;
+    }
 
-        .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: #fff;
-            animation: spin 1s ease-out infinite;
-        }
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      border-top-color: #fff;
+      animation: spin 1s ease-out infinite;
+    }
 
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      }
+    }
 
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: var(--text-color);
-            opacity: 0.6;
-        }
+    .loading {
+      text-align: center;
+      padding: 20px;
+      color: var(--text-color);
+      opacity: 0.6;
+    }
 
-        .related-profiles {
-            margin-top: 40px;
-        }
+    .related-profiles {
+      margin-top: 40px;
+    }
 
-        .related-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: var(--text-color);
-            opacity: 0.8;
-        }
+    .related-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 20px;
+      color: var(--text-color);
+      opacity: 0.8;
+    }
 
-        .related-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 15px;
-        }
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+      gap: 15px;
+    }
 
-        .related-profile {
-            text-align: center;
-        }
+    .related-profile {
+      text-align: center;
+    }
 
-        .related-avatar {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 5px;
-            border: 1px solid var(--border-color);
-        }
+    .related-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 5px;
+      border: 1px solid var(--border-color);
+    }
 
-        .related-username {
-            font-size: 12px;
-            color: var(--text-color);
-            text-decoration: none;
-            display: block;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
+    .related-username {
+      font-size: 12px;
+      color: var(--text-color);
+      text-decoration: none;
+      display: block;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
 
-        /* Modal styles */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(5px);
-        }
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.95);
+      backdrop-filter: blur(5px);
+    }
 
-        .modal-content {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            max-width: 90vw;
-            max-height: 90vh;
-            border-radius: 8px;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    .modal-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 90vw;
+      max-height: 90vh;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        .modal-loader {
-            width: 50px;
-            height: 50px;
-            border: 5px solid var(--border-color);
-            border-top-color: var(--primary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            position: absolute;
-            z-index: 1002;
-        }
+    .modal-loader {
+      width: 50px;
+      height: 50px;
+      border: 5px solid var(--border-color);
+      border-top-color: var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      position: absolute;
+      z-index: 1002;
+    }
 
-        .modal img,
-        .modal video {
-            width: 100%;
-            height: auto;
-            max-height: 90vh;
-            object-fit: contain;
-            border-radius: 8px;
-            display: none;
-            /* Hidden by default */
-        }
+    .modal img,
+    .modal video {
+      width: 100%;
+      height: auto;
+      max-height: 90vh;
+      object-fit: contain;
+      border-radius: 8px;
+      display: none;
+      /* Hidden by default */
+    }
 
-        .modal-close {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            z-index: 1001;
-            background: rgba(0, 0, 0, 0.5);
-            border-radius: 50%;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    .modal-close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: white;
+      font-size: 40px;
+      font-weight: bold;
+      cursor: pointer;
+      z-index: 1001;
+      background: rgba(0, 0, 0, 0.5);
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
-        .modal-close:hover {
-            opacity: 0.7;
-            background: rgba(0, 0, 0, 0.8);
-        }
+    .modal-close:hover {
+      opacity: 0.7;
+      background: rgba(0, 0, 0, 0.8);
+    }
 
-        .error-message {
-            text-align: center;
-            color: #ff4444;
-            padding: 20px;
-            margin: 20px 0;
-            background: rgba(255, 68, 68, 0.1);
-            border-radius: 8px;
-            border: 1px solid rgba(255, 68, 68, 0.3);
-        }
+    .error-message {
+      text-align: center;
+      color: #ff4444;
+      padding: 20px;
+      margin: 20px 0;
+      background: rgba(255, 68, 68, 0.1);
+      border-radius: 8px;
+      border: 1px solid rgba(255, 68, 68, 0.3);
+    }
 
-        .no-posts {
-            text-align: center;
-            color: var(--text-color);
-            opacity: 0.6;
-            padding: 40px 20px;
-            font-size: 16px;
-        }
-    </style>
+    .no-posts {
+      text-align: center;
+      color: var(--text-color);
+      opacity: 0.6;
+      padding: 40px 20px;
+      font-size: 16px;
+    }
+  </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="profile-header">
-            <div class="profile-pic-container">
-                <div class="profile-pic-loader" id="pfpLoader"></div>
-                <a href="/api/image?url=<%= encodeURIComponent(user.profile_pic_url_hd) %>">
-                    <img src="/api/image?url=<%= encodeURIComponent(user.profile_pic_url) %>" alt="Profile Picture"
-                        class="profile-pic" id="pfpImage"
-                        onload="document.getElementById('pfpLoader').style.display='none';">
-                </a>
+  <div class="container">
+    <div class="profile-header">
+      <div class="profile-pic-container">
+        <div class="profile-pic-loader" id="pfpLoader"></div>
+        <a href="/api/image?url=<%= encodeURIComponent(user.hd_profile_pic_url_info.url) %>">
+          <img src="/api/image?url=<%= encodeURIComponent(user.profile_pic_url) %>" alt="Profile Picture" class="profile-pic" id="pfpImage" onload="document.getElementById('pfpLoader').style.display='none';">
+        </a>
+      </div>
+      <div class="profile-info">
+        <h1 class="username">
+          <%= user.username %>
+        </h1>
+
+        <div class="stats">
+          <div class="stat">
+            <div class="stat-count">
+              <%= user.follower_count.toLocaleString() %>
             </div>
-            <div class="profile-info">
-                <h1 class="username">
-                    <%= user.username %>
-                </h1>
-
-                <div class="stats">
-                    <div class="stat">
-                        <div class="stat-count">
-                            <%= user.edge_followed_by.count.toLocaleString() %>
-                        </div>
-                        <div class="stat-label">Followers</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-count">
-                            <%= user.edge_follow.count.toLocaleString() %>
-                        </div>
-                        <div class="stat-label">Following</div>
-                    </div>
-                    <div class="stat">
-                        <div class="stat-count">
-                            <%= user.edge_owner_to_timeline_media.count.toLocaleString() %>
-                        </div>
-                        <div class="stat-label">Posts</div>
-                    </div>
-                </div>
-
-                <% if (user.biography) { %>
-                    <div class="bio">
-                        <%- user.biography.replace(/\n/g, '<br>' ) %>
-                    </div>
-                    <% } %>
-
-                        <% if (user.bio_links && user.bio_links.length> 0) { %>
-                            <div class="bio-links">
-                                <% user.bio_links.forEach(link=> { %>
-                                    <a href="<%= link.url %>" class="bio-link" target="_blank"
-                                        rel="noopener noreferrer">
-                                        <%= link.title || link.url %>
-                                    </a>
-                                    <% }); %>
-                            </div>
-                            <% } %>
+            <div class="stat-label">Followers</div>
+          </div>
+          <div class="stat">
+            <div class="stat-count">
+              <%= user.following_count.toLocaleString() %>
             </div>
+            <div class="stat-label">Following</div>
+          </div>
+          <div class="stat">
+            <div class="stat-count">
+              <%= user.media_count.toLocaleString() %>
+            </div>
+            <div class="stat-label">Posts</div>
+          </div>
         </div>
 
-        <% if (user.edge_owner_to_timeline_media.count> 0) { %>
-            <% if (user.edge_owner_to_timeline_media.edges && user.edge_owner_to_timeline_media.edges.length> 0) { %>
-                <div class="media-grid" id="mediaGrid">
-                    <% user.edge_owner_to_timeline_media.edges.forEach(post=> { %>
-                        <div class="media-item"
-                            onclick="openModal('<%= post.node.display_url %>', <%= post.node.is_video || false %>, '<%= post.node.video_url || '' %>')">
-                            <img src="/api/image?url=<%= encodeURIComponent(post.node.display_url) %>" alt="Post"
-                                loading="lazy">
-                            <% if (post.node.is_video) { %>
-                                <div class="video-indicator"></div>
-                                <% } %>
-                        </div>
-                        <% }); %>
-                </div>
-
-                <% if (user.edge_owner_to_timeline_media.page_info &&
-                    user.edge_owner_to_timeline_media.page_info.has_next_page) { %>
-                    <div class="load-more">
-                        <button class="load-more-btn" id="loadMoreBtn" onclick="loadMorePosts()"
-                            style="display: none;">Load More Posts</button>
-                        <div class="loading" id="loadingIndicator" style="display: none;">
-                            <div class="loading-spinner"></div>
-                        </div>
-                        <div class="error-message" id="errorMessage" style="display: none;"></div>
-                    </div>
-                    <% } %>
-                        <% } else { %>
-                            <div class="no-posts">No posts available</div>
-                            <% } %>
-                                <% } else { %>
-                                    <div class="no-posts">This user hasn't posted anything yet</div>
-                                    <% } %>
-
-                                        <% if (user.edge_related_profiles && user.edge_related_profiles.edges &&
-                                            user.edge_related_profiles.edges.length> 0) { %>
-                                            <div class="related-profiles">
-                                                <div class="related-title">Suggested for you</div>
-                                                <div class="related-grid">
-                                                    <% user.edge_related_profiles.edges.slice(0, 8).forEach(profile=> {
-                                                        %>
-                                                        <div class="related-profile">
-                                                            <a href="/<%= profile.node.username %>">
-                                                                <img src="/api/image?url=<%= encodeURIComponent(profile.node.profile_pic_url) %>"
-                                                                    alt="<%= profile.node.username %>"
-                                                                    class="related-avatar" loading="lazy">
-                                                            </a>
-                                                            <a href="/<%= profile.node.username %>"
-                                                                class="related-username">
-                                                                <%= profile.node.username %>
-                                                            </a>
-                                                        </div>
-                                                        <% }); %>
-                                                </div>
-                                            </div>
-                                            <% } %>
-    </div>
-
-    <div id="mediaModal" class="modal">
-        <span class="modal-close" onclick="closeModal()">&times;</span>
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <div class="modal-loader" id="modalLoader"></div>
-            <img id="modalImage" alt="Full size post">
-            <video id="modalVideo" controls preload="metadata">
-                Your browser does not support the video tag.
-            </video>
+        <% if (user.biography) { %>
+        <div class="bio">
+          <%- user.biography.replace(/\n/g, '<br>' ) %>
         </div>
-    </div>
-
-    <script>
-        // --- State Variables ---
-        let nextCursor = null;
-        let isLoading = false;
-        const username = '<%= user.username %>';
-
-        // --- Initialize pagination cursor from server data ---
-        <% if (user.edge_owner_to_timeline_media.page_info && user.edge_owner_to_timeline_media.page_info.has_next_page) { %>
-            nextCursor = '<%= user.edge_owner_to_timeline_media.page_info.end_cursor %>';
         <% } %>
 
-        // --- DOM Element References ---
-        const modal = document.getElementById('mediaModal');
-        const modalImage = document.getElementById('modalImage');
-        const modalVideo = document.getElementById('modalVideo');
-        const modalLoader = document.getElementById('modalLoader');
-        const loadMoreBtn = document.getElementById('loadMoreBtn');
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        const errorDiv = document.getElementById('errorMessage');
-        const mediaGrid = document.getElementById('mediaGrid');
+        <% if (user.bio_links && user.bio_links.length> 0) { %>
+        <div class="bio-links">
+          <% user.bio_links.forEach(link=> { %>
+          <a href="<%= link.url %>" class="bio-link" target="_blank" rel="noopener noreferrer">
+            <%= link.title || link.url %>
+          </a>
+          <% }); %>
+        </div>
+        <% } %>
+      </div>
+    </div>
 
-        // --- Utility Functions ---
-        function preventScroll(e) {
-            e.preventDefault();
+    <% if (user.edge_owner_to_timeline_media.edges && user.edge_owner_to_timeline_media.edges.length > 0) { %>
+    <div class="media-grid" id="mediaGrid">
+      <% user.edge_owner_to_timeline_media.edges.forEach(post=> { %>
+      <div class="media-item" onclick="openModal('<%= post.node.image_url %>', <%= post.node.is_video || false %>, '<%= post.node.video_url || '' %>')">
+        <img src="/api/image?url=<%= encodeURIComponent(post.node.image_url) %>" alt="Post" loading="lazy">
+        <% if (post.node.is_video) { %>
+        <div class="video-indicator"></div>
+        <% } %>
+      </div>
+      <% }); %>
+    </div>
+
+    <% if (user.edge_owner_to_timeline_media.page_info && user.edge_owner_to_timeline_media.page_info.has_next_page) { %>
+    <div class="load-more">
+      <button class="load-more-btn" id="loadMoreBtn" onclick="loadMorePosts()" style="display: none;">Load More Posts</button>
+      <div class="loading" id="loadingIndicator" style="display: none;">
+        <div class="loading-spinner"></div>
+      </div>
+      <div class="error-message" id="errorMessage" style="display: none;"></div>
+    </div>
+    <% } %>
+    <% } else { %>
+    <div class="no-posts">This user hasn't posted anything yet</div>
+    <% } %>
+
+    <% if (user.edge_related_profiles && user.edge_related_profiles.edges && user.edge_related_profiles.edges.length> 0) { %>
+    <div class="related-profiles">
+      <div class="related-title">Suggested for you</div>
+      <div class="related-grid">
+        <% user.edge_related_profiles.edges.slice(0, 8).forEach(profile=> { %>
+        <div class="related-profile">
+          <a href="/<%= profile.node.username %>">
+            <img src="/api/image?url=<%= encodeURIComponent(profile.node.profile_pic_url) %>" alt="<%= profile.node.username %>" class="related-avatar" loading="lazy">
+          </a>
+          <a href="/<%= profile.node.username %>" class="related-username">
+            <%= profile.node.username %>
+          </a>
+        </div>
+        <% }); %>
+      </div>
+    </div>
+    <% } %>
+  </div>
+
+  <div id="mediaModal" class="modal">
+    <span class="modal-close" onclick="closeModal()">&times;</span>
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <div class="modal-loader" id="modalLoader"></div>
+      <img id="modalImage" alt="Full size post">
+      <video id="modalVideo" controls preload="metadata">
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </div>
+
+  <script>
+    // --- State Variables ---
+    let nextCursor = null;
+    let isLoading = false;
+    const username = '<%= user.username %>';
+
+    // --- Initialize pagination cursor from server data ---
+    <% if (user.edge_owner_to_timeline_media.page_info && user.edge_owner_to_timeline_media.page_info.has_next_page) { %>
+    nextCursor = '<%= user.edge_owner_to_timeline_media.page_info.end_cursor %>';
+    <% } %>
+
+    // --- DOM Element References ---
+    const modal = document.getElementById('mediaModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalVideo = document.getElementById('modalVideo');
+    const modalLoader = document.getElementById('modalLoader');
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const errorDiv = document.getElementById('errorMessage');
+    const mediaGrid = document.getElementById('mediaGrid');
+
+    // --- Utility Functions ---
+    function preventScroll(e) {
+      e.preventDefault();
+    }
+
+    // --- Modal Logic ---
+    function openModal(imageUrl, isVideo, videoUrl) {
+      // Show modal and loader
+      modal.style.display = 'block';
+      modalLoader.style.display = 'block';
+
+      // Hide media elements initially
+      modalImage.style.display = 'none';
+      modalVideo.style.display = 'none';
+      modalVideo.pause();
+      modalVideo.currentTime = 0;
+
+      // Function to run when media is loaded
+      const onMediaLoaded = () => {
+        modalLoader.style.display = 'none';
+        if (isVideo) {
+          modalVideo.style.display = 'block';
+          modalVideo.play();
+        } else {
+          modalImage.style.display = 'block';
+        }
+      };
+
+      if (isVideo && videoUrl) {
+        modalVideo.src = '/api/image?url=' + encodeURIComponent(videoUrl);
+        modalVideo.onloadeddata = onMediaLoaded;
+      } else {
+        modalImage.src = '/api/image?url=' + encodeURIComponent(imageUrl);
+        modalImage.onload = onMediaLoaded;
+      }
+
+      // Prevent body scroll
+      document.body.style.overflow = 'hidden';
+      document.addEventListener('wheel', preventScroll, {
+        passive: false
+      });
+      document.addEventListener('touchmove', preventScroll, {
+        passive: false
+      });
+    }
+
+    function closeModal() {
+      modal.style.display = 'none';
+
+      // Stop video and clear src to prevent background playback
+      modalVideo.pause();
+      modalVideo.src = '';
+      modalImage.src = '';
+
+      // Restore body scroll
+      document.body.style.overflow = 'auto';
+      document.removeEventListener('wheel', preventScroll);
+      document.removeEventListener('touchmove', preventScroll);
+    }
+
+    // --- Data Loading Logic ---
+    async function loadMorePosts() {
+      if (isLoading || !nextCursor) return;
+
+      isLoading = true;
+      loadingIndicator.style.display = 'block';
+      loadMoreBtn.style.display = 'none';
+      errorDiv.style.display = 'none';
+
+      try {
+        const url = `/api/${username}/posts?after=${encodeURIComponent(nextCursor)}`;
+        const response = await fetch(url);
+
+        if (!response.ok) {
+          throw new Error(`Server responded with status ${response.status}`);
         }
 
-        // --- Modal Logic ---
-        function openModal(imageUrl, isVideo, videoUrl) {
-            // Show modal and loader
-            modal.style.display = 'block';
-            modalLoader.style.display = 'block';
+        const data = await response.json();
 
-            // Hide media elements initially
-            modalImage.style.display = 'none';
-            modalVideo.style.display = 'none';
-            modalVideo.pause();
-            modalVideo.currentTime = 0;
+        if (data.error) {
+          throw new Error(data.error);
+        }
 
-            // Function to run when media is loaded
-            const onMediaLoaded = () => {
-                modalLoader.style.display = 'none';
-                if (isVideo) {
-                    modalVideo.style.display = 'block';
-                    modalVideo.play();
-                } else {
-                    modalImage.style.display = 'block';
-                }
-            };
+        if (data.posts && data.posts.length > 0) {
+          const fragment = document.createDocumentFragment();
 
-            if (isVideo && videoUrl) {
-                modalVideo.src = '/api/image?url=' + encodeURIComponent(videoUrl);
-                modalVideo.onloadeddata = onMediaLoaded;
-            } else {
-                modalImage.src = '/api/image?url=' + encodeURIComponent(imageUrl);
-                modalImage.onload = onMediaLoaded;
+          data.posts.forEach(post => {
+            const mediaItem = document.createElement('div');
+            mediaItem.className = 'media-item';
+
+            const displayUrl = post.display_url || post.thumbnail_url;
+            const videoUrl = post.video_url || '';
+
+            mediaItem.onclick = () => openModal(displayUrl, post.is_video, videoUrl);
+
+            const img = document.createElement('img');
+            img.src = '/api/image?url=' + encodeURIComponent(displayUrl);
+            img.alt = 'Post';
+            img.loading = 'lazy';
+
+            mediaItem.appendChild(img);
+
+            if (post.is_video) {
+              const videoIndicator = document.createElement('div');
+              videoIndicator.className = 'video-indicator';
+              mediaItem.appendChild(videoIndicator);
             }
 
-            // Prevent body scroll
-            document.body.style.overflow = 'hidden';
-            document.addEventListener('wheel', preventScroll, { passive: false });
-            document.addEventListener('touchmove', preventScroll, { passive: false });
+            fragment.appendChild(mediaItem);
+          });
+
+          mediaGrid.appendChild(fragment);
+
+          nextCursor = data.nextCursor;
+          if (!data.hasMore) {
+            nextCursor = null;
+            loadingIndicator.style.display = 'none';
+          }
+        } else {
+          nextCursor = null;
+          loadingIndicator.style.display = 'none';
         }
-
-        function closeModal() {
-            modal.style.display = 'none';
-
-            // Stop video and clear src to prevent background playback
-            modalVideo.pause();
-            modalVideo.src = '';
-            modalImage.src = '';
-
-            // Restore body scroll
-            document.body.style.overflow = 'auto';
-            document.removeEventListener('wheel', preventScroll);
-            document.removeEventListener('touchmove', preventScroll);
+      } catch (error) {
+        console.error('Error loading more posts:', error);
+        errorDiv.textContent = 'Failed to load posts. ' + error.message;
+        errorDiv.style.display = 'block';
+        loadMoreBtn.textContent = 'Try Again';
+        loadMoreBtn.style.display = 'inline-block';
+      } finally {
+        isLoading = false;
+        // Only hide loading spinner if there's more to load
+        if (nextCursor) {
+          loadingIndicator.style.display = 'none';
         }
+      }
+    }
 
-        // --- Data Loading Logic ---
-        async function loadMorePosts() {
-            if (isLoading || !nextCursor) return;
+    // --- Infinite Scroll Logic ---
+    function handleInfiniteScroll() {
+      if (isLoading || !nextCursor) return;
 
-            isLoading = true;
-            loadingIndicator.style.display = 'block';
-            loadMoreBtn.style.display = 'none';
-            errorDiv.style.display = 'none';
+      const scrollPosition = window.innerHeight + window.scrollY;
+      const threshold = document.body.offsetHeight - 1000;
 
-            try {
-                const url = `/api/${username}/posts?after=${encodeURIComponent(nextCursor)}`;
-                const response = await fetch(url);
+      if (scrollPosition >= threshold) {
+        loadMorePosts();
+      }
+    }
 
-                if (!response.ok) {
-                    throw new Error(`Server responded with status ${response.status}`);
-                }
+    // --- Event Listeners ---
+    document.addEventListener('DOMContentLoaded', () => {
+      // Handle grid image loading errors
+      // Use event delegation for dynamically added images
+      mediaGrid.addEventListener('error', (event) => {
+        if (event.target.tagName === 'IMG') {
+          const img = event.target;
+          const parent = img.parentElement;
+          const rootStyles = getComputedStyle(document.documentElement);
 
-                const data = await response.json();
-
-                if (data.error) {
-                    throw new Error(data.error);
-                }
-
-                if (data.posts && data.posts.length > 0) {
-                    const fragment = document.createDocumentFragment();
-
-                    data.posts.forEach(post => {
-                        const mediaItem = document.createElement('div');
-                        mediaItem.className = 'media-item';
-
-                        const displayUrl = post.display_url || post.thumbnail_url;
-                        const videoUrl = post.video_url || '';
-
-                        mediaItem.onclick = () => openModal(displayUrl, post.is_video, videoUrl);
-
-                        const img = document.createElement('img');
-                        img.src = '/api/image?url=' + encodeURIComponent(displayUrl);
-                        img.alt = 'Post';
-                        img.loading = 'lazy';
-
-                        mediaItem.appendChild(img);
-
-                        if (post.is_video) {
-                            const videoIndicator = document.createElement('div');
-                            videoIndicator.className = 'video-indicator';
-                            mediaItem.appendChild(videoIndicator);
-                        }
-
-                        fragment.appendChild(mediaItem);
-                    });
-
-                    mediaGrid.appendChild(fragment);
-
-                    nextCursor = data.nextCursor;
-                    if (!data.hasMore) {
-                        nextCursor = null;
-                        loadingIndicator.style.display = 'none';
-                    }
-                } else {
-                    nextCursor = null;
-                    loadingIndicator.style.display = 'none';
-                }
-            } catch (error) {
-                console.error('Error loading more posts:', error);
-                errorDiv.textContent = 'Failed to load posts. ' + error.message;
-                errorDiv.style.display = 'block';
-                loadMoreBtn.textContent = 'Try Again';
-                loadMoreBtn.style.display = 'inline-block';
-            } finally {
-                isLoading = false;
-                // Only hide loading spinner if there's more to load
-                if (nextCursor) {
-                    loadingIndicator.style.display = 'none';
-                }
-            }
+          parent.style.backgroundColor = rootStyles.getPropertyValue('--card-bg').trim();
+          parent.innerHTML = '<div class="failed-load">Failed to load</div>';
         }
+      }, true); // Use capture phase to catch errors
 
-        // --- Infinite Scroll Logic ---
-        function handleInfiniteScroll() {
-            if (isLoading || !nextCursor) return;
-
-            const scrollPosition = window.innerHeight + window.scrollY;
-            const threshold = document.body.offsetHeight - 1000;
-
-            if (scrollPosition >= threshold) {
-                loadMorePosts();
-            }
+      // Close modal with Escape key
+      document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+          closeModal();
         }
+      });
 
-        // --- Event Listeners ---
-        document.addEventListener('DOMContentLoaded', () => {
-            // Handle grid image loading errors
-            // Use event delegation for dynamically added images
-            mediaGrid.addEventListener('error', (event) => {
-                if (event.target.tagName === 'IMG') {
-                    const img = event.target;
-                    const parent = img.parentElement;
-                    const rootStyles = getComputedStyle(document.documentElement);
+      // Close modal on background click
+      modal.addEventListener('click', (event) => {
+        if (event.target === modal) {
+          closeModal();
+        }
+      });
 
-                    parent.style.backgroundColor = rootStyles.getPropertyValue('--card-bg').trim();
-                    parent.innerHTML = '<div class="failed-load">Failed to load</div>';
-                }
-            }, true); // Use capture phase to catch errors
-
-            // Close modal with Escape key
-            document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape') {
-                    closeModal();
-                }
-            });
-
-            // Close modal on background click
-            modal.addEventListener('click', (event) => {
-                if (event.target === modal) {
-                    closeModal();
-                }
-            });
-
-            // Enable infinite scroll if there's a cursor
-            if (nextCursor) {
-                window.addEventListener('scroll', handleInfiniteScroll);
-            }
-        });
-    </script>
+      // Enable infinite scroll if there's a cursor
+      if (nextCursor) {
+        window.addEventListener('scroll', handleInfiniteScroll);
+      }
+    });
+  </script>
 </body>
 
 </html>

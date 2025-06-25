@@ -17,10 +17,10 @@
 
 ## 🚀 Features
 
-* Minimalist Instagram UI clone
-* Server-side rendered using EJS
-* No tracking, no nonsense
-* Easy to self-host
+- Minimalist Instagram UI clone
+- Server-side rendered using EJS
+- No tracking, no nonsense
+- Easy to self-host
 
 ---
 
@@ -34,8 +34,8 @@
 
 It is crucial that you do not use your personal or primary Instagram account.
 
-  * **Account Safety:** To avoid having your main account flagged or banned by Instagram, create a new, separate account exclusively for 0gram.
-  * **Verification:** The new account must be verified with both an **email address and a phone number**. Instagram may restrict accounts that it detects as bots. You can use online phone verification services for this step if needed.
+- **Account Safety:** To avoid having your main account flagged or banned by Instagram, create a new, separate account exclusively for 0gram.
+- **Verification:** The new account must be verified with both an **email address and a phone number**. Instagram may restrict accounts that it detects as bots. You can use online phone verification services for this step if needed.
 
 #### **2. Extract Session Headers**
 
@@ -50,7 +50,7 @@ Once your dedicated account is created and you are logged in via a web browser:
 7.  ![image](https://github.com/user-attachments/assets/ece36b88-df1c-4a11-bb84-64ce4d6cf88d)
 8.  Right-click on the resulting request, navigate to **Copy**, and select **Copy as Node.js fetch**.
 9.  ![image](https://github.com/user-attachments/assets/346f73bd-9c2b-493e-807e-a84c087ffa8c)
-10.  Paste the copied code into a temporary text editor. You will only need the `headers` object from this code block.
+10. Paste the copied code into a temporary text editor. You will only need the `headers` object from this code block.
 
 #### **3. Create the `.headers.js` File**
 
@@ -60,11 +60,11 @@ Once your dedicated account is created and you are logged in via a web browser:
 
     ```js
     const headers = {
-        // Paste all the header key-value pairs here. For example:
-        "accept": "text/html,application/xhtml+xml,xml;q=0.9,image/webp,*/*;q=0.8",
-        "accept-language": "en-US,en;q=0.5",
-        "sec-fetch-dest": "document",
-        // ... and all other headers from the copied data
+      // Paste all the header key-value pairs here. For example:
+      accept: "text/html,application/xhtml+xml,xml;q=0.9,image/webp,*/*;q=0.8",
+      "accept-language": "en-US,en;q=0.5",
+      "sec-fetch-dest": "document",
+      // ... and all other headers from the copied data
     };
 
     module.exports = headers;
@@ -72,7 +72,7 @@ Once your dedicated account is created and you are logged in via a web browser:
 
 3.  Save the file. Your configuration is now complete.
 
------
+---
 
 ### **Part 2: Installation and Execution**
 

@@ -1,170 +1,187 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/x-icon" href="/favicon.png">
     <title>0gram - Instagram Alternative</title>
     <style>
+      :root {
+        --bg-color: #121212;
+        --text-color: #f5f5f5;
+        --primary-color: #0095f6;
+        --border-color: #363636;
+        --card-bg: #1e1e1e;
+      }
+
+      @media (prefers-color-scheme: light) {
         :root {
-            --bg-color: #121212;
-            --text-color: #f5f5f5;
-            --primary-color: #0095f6;
-            --border-color: #363636;
-            --card-bg: #1e1e1e;
+          --bg-color: #fafafa;
+          --text-color: #262626;
+          --primary-color: #0095f6;
+          --border-color: #dbdbdb;
+          --card-bg: #ffffff;
         }
+      }
 
-        @media (prefers-color-scheme: light) {
-            :root {
-                --bg-color: #fafafa;
-                --text-color: #262626;
-                --primary-color: #0095f6;
-                --border-color: #dbdbdb;
-                --card-bg: #ffffff;
-            }
-        }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family:
+          -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica,
+          Arial, sans-serif;
+      }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        }
+      body {
+        background-color: var(--bg-color);
+        color: var(--text-color);
+        transition: all 0.3s ease;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: all 0.3s ease;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+      .container {
+        max-width: 935px;
+        margin: 0 auto;
+        padding: 40px 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+      }
 
-        .container {
-            max-width: 935px;
-            margin: 0 auto;
-            padding: 40px 20px;
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
+      .logo {
+        font-size: 3rem;
+        font-weight: 300;
+        margin-bottom: 20px;
+        color: var(--primary-color);
+      }
 
-        .logo {
-            font-size: 3rem;
-            font-weight: 300;
-            margin-bottom: 20px;
-            color: var(--primary-color);
-        }
+      .tagline {
+        font-size: 1.2rem;
+        margin-bottom: 40px;
+        max-width: 600px;
+        line-height: 1.6;
+      }
 
-        .tagline {
-            font-size: 1.2rem;
-            margin-bottom: 40px;
-            max-width: 600px;
-            line-height: 1.6;
-        }
+      .github {
+        position: fixed;
+        top: 16px;
+        right: 16px;
+        padding: 10px;
+        color: var(--text-color);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background-color: var(--card-bg);
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+      }
 
-        .github {
-            position: fixed;
-            top: 16px;
-            right: 16px;
-            padding: 10px;
-            color: var(--text-color);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background-color: var(--card-bg);
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-        }
+      .github:hover {
+        background-color: var(--border-color);
+        color: white;
+      }
 
-        .github:hover {
-            background-color: var(--border-color);
-            color: white;
-        }
+      .github span,
+      .github svg {
+        vertical-align: middle;
+      }
 
-        .github span, .github svg {
-            vertical-align: middle;
-        }
+      .search-box {
+        width: 100%;
+        max-width: 500px;
+        margin-bottom: 30px;
+      }
 
-        .search-box {
-            width: 100%;
-            max-width: 500px;
-            margin-bottom: 30px;
-        }
+      .search-input {
+        width: 100%;
+        padding: 12px 20px;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 1rem;
+        background-color: var(--card-bg);
+        color: var(--text-color);
+      }
 
-        .search-input {
-            width: 100%;
-            padding: 12px 20px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 1rem;
-            background-color: var(--card-bg);
-            color: var(--text-color);
-        }
+      .search-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+      }
 
-        .search-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
+      footer {
+        text-align: center;
+        padding: 20px;
+        border-top: 1px solid var(--border-color);
+        margin-top: auto;
+      }
 
-        footer {
-            text-align: center;
-            padding: 20px;
-            border-top: 1px solid var(--border-color);
-            margin-top: auto;
-        }
+      footer a {
+        color: var(--primary-color);
+        text-decoration: none;
+      }
 
-        footer a {
-            color: var(--primary-color);
-            text-decoration: none;
-        }
+      footer a:hover {
+        color: #ccc;
+      }
 
-        footer a:hover {
-            color: #ccc;
-        }
+      footer svg {
+        fill: currentColor;
+        vertical-align: middle;
+      }
 
-        footer svg {
-            fill: currentColor;
-            vertical-align: middle;
-        }
-
-        footer span {
-            vertical-align: middle;
-        }
+      footer span {
+        vertical-align: middle;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <a href="https://github.com/NonsensicalOne/0gram" class="github">
-        <svg role="img" viewBox="0 0 24 24" width="24px" height="24px" xmlns="http://www.w3.org/2000/svg">
-            <title>GitHub</title>
-            <path fill="currentColor"
-                d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" />
-        </svg>
-        <span>Github</span>
+      <svg
+        role="img"
+        viewBox="0 0 24 24"
+        width="24px"
+        height="24px"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <title>GitHub</title>
+        <path
+          fill="currentColor"
+          d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+        />
+      </svg>
+      <span>Github</span>
     </a>
 
     <div class="container">
-        <h1 class="logo">0gram</h1>
-        <p class="tagline">A minimal, privacy-focused alternative frontend for Instagram. View profiles and content
-            without tracking or distractions.</p>
+      <h1 class="logo">0gram</h1>
+      <p class="tagline">
+        A minimal, privacy-focused alternative frontend for Instagram. View
+        profiles and content without tracking or distractions.
+      </p>
 
-        <div class="search-box">
-            <form action="/" method="GET">
-                <input type="text" name="username" class="search-input" placeholder="Enter Instagram username..."
-                    required>
-            </form>
-        </div>
+      <div class="search-box">
+        <form action="/" method="GET">
+          <input
+            type="text"
+            name="username"
+            class="search-input"
+            placeholder="Enter Instagram username..."
+            required
+          />
+        </form>
+      </div>
     </div>
 
     <footer>
-        <p>0gram is not affiliated with Instagram or Meta.</p>
+      <p>0gram is not affiliated with Instagram or Meta.</p>
     </footer>
-</body>
-
+  </body>
 </html>

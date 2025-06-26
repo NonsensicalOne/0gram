@@ -1,5 +1,7 @@
 # 0gram – Lightweight Instagram Alternative Front-End
 
+## I gave up from developing the project. Instagram API gives me headaches.
+
 [![Static Badge](https://img.shields.io/badge/made_with-NodeJS-green)](https://nodejs.org/)
 [![GitHub Issues](https://img.shields.io/github/issues/NonsensicalOne/0gram)](https://github.com/NonsensicalOne/0gram/issues)
 [![Stars](https://badgen.net/github/stars/NonsensicalOne/0gram)](https://github.com/NonsensicalOne/0gram/stargazers)

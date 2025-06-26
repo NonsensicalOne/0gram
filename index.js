@@ -1,14 +1,11 @@
 const express = require("ultimate-express");
 const app = express();
-const path = require("path")
+const path = require("path");
 const fetch = require("undici").fetch;
 const port = 3000;
 app.set("view engine", "ejs");
 
 const headers = require("./.headers.js");
-const { time } = require("console");
-const { get } = require("http");
-
 app.get("/", (req, res) => {
   if (req.query.username) {
     return res.redirect(`/${req.query.username}`);
@@ -59,19 +56,23 @@ app.get("/api/:username/posts", async (req, res) => {
   const after = req.query.after || "";
 
   try {
-    const profileResponse = await fetch("https://www.instagram.com/graphql/query", {
-      method: "POST",
-      headers: headers,
-      credentials: "include",
-      body: `av=17841475430069406&__d=www&__user=0&__a=1&__req=z&__hs=20264.HYP%3Ainstagram_web_pkg.2.1...0&dpr=3&__ccg=GOOD&__rev=1024176170&__s=hw15o2%3A1y992x%3Azeyvho&__hsi=7519906151278841461&__dyn=7xeUjG1mxu1syUbFp41twWwIxu13wvoKewSAwHwNw9G2S7o2vwa24o0B-q1ew6ywaq0yE462mcw5Mx62G5UswoEcE7O2l0Fwqo31w9O1TwQzXwae4UaEW2G0AEco5G1Wxfxm16wUwtE1wEbUGdG1QwTU9UaQ0Lo6-3u2WE5B08-269wr86C1mgcEed6goK2O4Xxui2K7E5y4UrwHwGwa6byohw4rxO2Cq2K&__csr=gNd0wsaNQnd6OjV7lEYsyr9aj5iP4R9HAXOa-Zd5K8FpKHAjHQh9qBSpxejVbVap9pFpfXyGmWQrQaWAmGp9XGunqhazlLgTy4UyFWy8y88V9bzKXnzVXKFu2u6EReUNoKmq48RrGbLXgyQEWKEy9UoVF8x35jHx6Ly8hxp0DCGu2K4UhyWgjw05fOg6y0euqxa0YEf8jwgWx90tEc1cSlo8OwaG0CUf82zg7a0z45FA5EOV80Li05zo1D8dACdwLwbJ0hU12E7pCyHa0O83XoigapEW5X405jw4yc261DCgR25g2_wMwTo3ww3uo14806Oq02eC075E&__hsdp=gfX8lMx9axIl5jL8lcb1agDkNZT75h1uwckt4noSF2heELx9t6cQHe4sQq1vgK5V5wGo5hx26UfEaAfB86Fa85oqyEkAWw9J10g1BgnDU42mcAw4byqxebzHxem-iu1JG0K81cE21w4tw5Xwe-6o24wqEW1TG1axa0Ao7S0M8gwdQweE6K3q6827xy1nwGxoUW0Xoc823x2&__hblp=1615x216wio84U8A0zXy8qFa4Q0LE9GG2y8xi2138G322GimubzovVoiUS6VayVHCzpFeFe4o2kwx-2C78nh-5azEohoOi364E7K9GawOyqxebxa7uK3K78SeG6E4S2S260ja323e78gwzwqE7S0Xo-1OgC1PwuUpwTwZzE8E4uuq4rwioeU9Gxa0Aoswo830x20Ti0LyErwjUaEK6820Cxy6Ed-GwDxoVbAgW7U4F0-wPG2S1Lxe48jw&__comet_req=7&fb_dtsg=NAft0cIuJl80cYDootimyVD7moXmFDMrGGclV0cqSAZ7SSiQqcdqQZA%3A17843691127146670%3A1750856064&jazoest=26396&lsd=kb7kWXLtfhpPCKxAoQkcbJ&__spin_r=1024176170&__spin_b=trunk&__spin_t=1750864589&__crn=comet.igweb.PolarisProfilePostsTabRoute&fb_api_caller_class=RelayModern&fb_api_req_friendly_name=PolarisProfilePostsTabContentQuery_connection&variables=%7B%22after%22%3A%22${after}%22%2C%22before%22%3Anull%2C%22data%22%3A%7B%22count%22%3A12%2C%22include_reel_media_seen_timestamp%22%3Atrue%2C%22include_relationship_info%22%3Atrue%2C%22latest_besties_reel_media%22%3Atrue%2C%22latest_reel_media%22%3Atrue%7D%2C%22first%22%3A12%2C%22last%22%3Anull%2C%22username%22%3A%22${username}%22%2C%22__relay_internal__pv__PolarisIsLoggedInrelayprovider%22%3Atrue%2C%22__relay_internal__pv__PolarisShareSheetV3relayprovider%22%3Atrue%7D&server_timestamps=true&doc_id=24796768439926139`
-    });
+    const profileResponse = await fetch(
+      "https://www.instagram.com/graphql/query",
+      {
+        method: "POST",
+        headers: headers,
+        credentials: "include",
+        body: `av=17841475430069406&__d=www&__user=0&__a=1&__req=z&__hs=20264.HYP%3Ainstagram_web_pkg.2.1...0&dpr=3&__ccg=GOOD&__rev=1024176170&__s=hw15o2%3A1y992x%3Azeyvho&__hsi=7519906151278841461&__dyn=7xeUjG1mxu1syUbFp41twWwIxu13wvoKewSAwHwNw9G2S7o2vwa24o0B-q1ew6ywaq0yE462mcw5Mx62G5UswoEcE7O2l0Fwqo31w9O1TwQzXwae4UaEW2G0AEco5G1Wxfxm16wUwtE1wEbUGdG1QwTU9UaQ0Lo6-3u2WE5B08-269wr86C1mgcEed6goK2O4Xxui2K7E5y4UrwHwGwa6byohw4rxO2Cq2K&__csr=gNd0wsaNQnd6OjV7lEYsyr9aj5iP4R9HAXOa-Zd5K8FpKHAjHQh9qBSpxejVbVap9pFpfXyGmWQrQaWAmGp9XGunqhazlLgTy4UyFWy8y88V9bzKXnzVXKFu2u6EReUNoKmq48RrGbLXgyQEWKEy9UoVF8x35jHx6Ly8hxp0DCGu2K4UhyWgjw05fOg6y0euqxa0YEf8jwgWx90tEc1cSlo8OwaG0CUf82zg7a0z45FA5EOV80Li05zo1D8dACdwLwbJ0hU12E7pCyHa0O83XoigapEW5X405jw4yc261DCgR25g2_wMwTo3ww3uo14806Oq02eC075E&__hsdp=gfX8lMx9axIl5jL8lcb1agDkNZT75h1uwckt4noSF2heELx9t6cQHe4sQq1vgK5V5wGo5hx26UfEaAfB86Fa85oqyEkAWw9J10g1BgnDU42mcAw4byqxebzHxem-iu1JG0K81cE21w4tw5Xwe-6o24wqEW1TG1axa0Ao7S0M8gwdQweE6K3q6827xy1nwGxoUW0Xoc823x2&__hblp=1615x216wio84U8A0zXy8qFa4Q0LE9GG2y8xi2138G322GimubzovVoiUS6VayVHCzpFeFe4o2kwx-2C78nh-5azEohoOi364E7K9GawOyqxebxa7uK3K78SeG6E4S2S260ja323e78gwzwqE7S0Xo-1OgC1PwuUpwTwZzE8E4uuq4rwioeU9Gxa0Aoswo830x20Ti0LyErwjUaEK6820Cxy6Ed-GwDxoVbAgW7U4F0-wPG2S1Lxe48jw&__comet_req=7&fb_dtsg=NAft0cIuJl80cYDootimyVD7moXmFDMrGGclV0cqSAZ7SSiQqcdqQZA%3A17843691127146670%3A1750856064&jazoest=26396&lsd=kb7kWXLtfhpPCKxAoQkcbJ&__spin_r=1024176170&__spin_b=trunk&__spin_t=1750864589&__crn=comet.igweb.PolarisProfilePostsTabRoute&fb_api_caller_class=RelayModern&fb_api_req_friendly_name=PolarisProfilePostsTabContentQuery_connection&variables=%7B%22after%22%3A%22${after}%22%2C%22before%22%3Anull%2C%22data%22%3A%7B%22count%22%3A12%2C%22include_reel_media_seen_timestamp%22%3Atrue%2C%22include_relationship_info%22%3Atrue%2C%22latest_besties_reel_media%22%3Atrue%2C%22latest_reel_media%22%3Atrue%7D%2C%22first%22%3A12%2C%22last%22%3Anull%2C%22username%22%3A%22${username}%22%2C%22__relay_internal__pv__PolarisIsLoggedInrelayprovider%22%3Atrue%2C%22__relay_internal__pv__PolarisShareSheetV3relayprovider%22%3Atrue%7D&server_timestamps=true&doc_id=24796768439926139`,
+      },
+    );
 
     if (!profileResponse.ok) {
       return res.status(404).json({ error: "User not found" });
     }
 
     const profileData = await profileResponse.json();
-    const timeline = profileData?.data?.xdt_api__v1__feed__user_timeline_graphql_connection;
+    const timeline =
+      profileData?.data?.xdt_api__v1__feed__user_timeline_graphql_connection;
 
     if (!timeline || !Array.isArray(timeline.edges)) {
       return res.json({ posts: [], hasMore: false, nextCursor: null });
@@ -121,7 +122,8 @@ app.get("/:username", async (req, res) => {
       );
     }
     const info = JSON.parse(responseText);
-    const timelineData = info.data?.xdt_api__v1__feed__user_timeline_graphql_connection || "";
+    const timelineData =
+      info.data?.xdt_api__v1__feed__user_timeline_graphql_connection || "";
     if (!timelineData || !timelineData.edges) {
       return res.render("profile.ejs", {
         user: { edge_owner_to_timeline_media: { count: 0, edges: [] } },
@@ -129,22 +131,48 @@ app.get("/:username", async (req, res) => {
       });
     }
 
-    let userId = info.data?.xdt_api__v1__feed__user_timeline_graphql_connection?.edges?.[0]?.node?.user?.pk ?? "nouserid";
-    // second method to retrieve someone's ID
+    // First method: get it through posts
+    let userId =
+      info.data?.xdt_api__v1__feed__user_timeline_graphql_connection?.edges?.[0]
+        ?.node?.user?.pk ?? "nouserid";
+
+    // Second method: search to retrieve someone's ID
     if (userId == "nouserid") {
-      const searchResponse = await fetch(`https://www.instagram.com/web/search/topsearch/?query=${username}`, {
-        "headers": headers,
-        "referrerPolicy": "strict-origin-when-cross-origin",
-        "body": null,
-        "method": "GET"
-      });
+      const searchResponse = await fetch(
+        `https://www.instagram.com/web/search/topsearch/?query=${username}`,
+        {
+          headers: headers,
+          referrerPolicy: "strict-origin-when-cross-origin",
+          body: null,
+          method: "GET",
+        },
+      );
 
       const responseJson = await searchResponse.json();
-      responseJson.users.forEach(mf => {
+      responseJson.users.forEach((mf) => {
         if (mf.user.username == username) {
-          userId = mf.user.id
+          userId = mf.user.id;
         }
       });
+    }
+
+    // Third but slowest and crappiest one
+    if (userId == "nouserid") {
+      const profilePage = await fetch(`https://www.instagram.com/${username}`, {
+        headers: headers,
+        referrerPolicy: "strict-origin-when-cross-origin",
+        method: "GET",
+      });
+
+      const pageResponse = await profilePage.text();
+
+      const match = pageResponse.match(
+        /"props"\s*:\s*{[^}]*"id"\s*:\s*"(\d+)"/,
+      );
+
+      if (match && match[1]) {
+        userId = match[1];
+      }
     }
 
     const enhancedPosts = timelineData.edges.map((edge) => ({
@@ -160,13 +188,13 @@ app.get("/:username", async (req, res) => {
             : null,
         image_url:
           edge.node.image_versions2 &&
-            edge.node.image_versions2.candidates &&
-            edge.node.image_versions2.candidates.length > 0
+          edge.node.image_versions2.candidates &&
+          edge.node.image_versions2.candidates.length > 0
             ? edge.node.image_versions2.candidates[0].url
             : null,
         media_type:
           edge.node.video_versions !== null &&
-            edge.node.video_versions !== undefined
+          edge.node.video_versions !== undefined
             ? "video"
             : "image",
       },

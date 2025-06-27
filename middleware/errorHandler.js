@@ -1,5 +1,5 @@
 module.exports.notFound = (req, res) => {
-  res.status(404).json({ error: "Route not found" });
+  res.status(404).render("404", { url: req.originalUrl });
 };
 
 // eslint-disable-next-line no-unused-vars

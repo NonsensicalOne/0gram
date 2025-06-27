@@ -14,6 +14,9 @@ router.get("/:username", async (req, res, next) => {
     const userData = await fetchProfile(req.params.username);
     res.render("profile", { user: userData });
   } catch (err) {
+    if (err.status === 404) {
+      return res.status(404).render("404", { url: req.originalUrl });
+    }
     next(err);
   }
 });

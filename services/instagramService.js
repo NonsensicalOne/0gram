@@ -117,7 +117,7 @@ async function fetchProfile(username) {
       headers,
     });
     const html = await page.text();
-    const m = html.match(/"id":"(\d+)"/);
+    const m = html.match(/"props"\s*:\s*{\s*"id"\s*:\s*"(\d+)"/);
     userId = m?.[1];
   }
 

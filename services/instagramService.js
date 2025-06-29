@@ -100,25 +100,21 @@ async function fetchProfile(username) {
   let timeline = initial.data?.xdt_api__v1__feed__user_timeline_graphql_connection;
   let userId = timeline?.edges?.[0]?.node?.user?.pk || timeline?.edges?.[0]?.node?.owner?.pk;
 
-  // 2) Fallback: search endpoint
-  if (!userId) {
-    const search = await fetch(
-      `https://www.instagram.com/web/search/topsearch/?query=${username}`,
-      { headers, credentials: "include" },
-    );
-    const sjson = await search.json();
-    const found = sjson.users.find((u) => u.user.username === username);
-    userId = found?.user?.pk;
-  }
-
-  // 3) Fallback: HTML scraping
+  // 2) Fallback: HTML scraping
   if (!userId) {
     const page = await fetch(`https://www.instagram.com/${username}`, {
       headers,
     });
     const html = await page.text();
-    const m = html.match(/"props"\s*:\s*{\s*"id"\s*:\s*"(\d+)"/);
-    userId = m?.[1];
+
+    const searchString = '"props":{"id":"';
+    const startIndex = html.indexOf(searchString);
+
+    if (startIndex !== -1) {
+      const valueStart = startIndex + searchString.length;
+      const valueEnd = html.indexOf('"', valueStart);
+      userId = html.substring(valueStart, valueEnd);
+    }
   }
 
   if (!userId)

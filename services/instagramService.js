@@ -22,16 +22,26 @@ async function postJSON(url, body) {
 
 // Proxy image fetch
 async function fetchImage(url) {
-  if (!url)
+  if (!url) {
     throw Object.assign(new Error("Image URL required"), { status: 400 });
+  }
+
+  const allowedDomain = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)*fbcdn\.net(\/.*)?$/;
+  if (!allowedDomain.test(url)) {
+    throw Object.assign(new Error("Image URL must be from fbcdn.net or its subdomains"), { status: 400 });
+  }
+
   const res = await fetch(url, {
     method: "GET",
-    headers: { ...headers, referer: "https://www.instagram.com/" },
+    headers: { referer: "https://www.instagram.com/" },
   });
-  if (!res.ok)
+
+  if (!res.ok) {
     throw Object.assign(new Error(`Failed to fetch image: ${res.status}`), {
       status: res.status,
     });
+  }
+
   const contentType = res.headers.get("content-type") || "image/jpeg";
   const array = await res.arrayBuffer();
   return { contentType, data: Buffer.from(array) };

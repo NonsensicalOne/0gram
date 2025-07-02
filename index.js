@@ -2,7 +2,6 @@ const express = require("ultimate-express");
 const path = require("path");
 const { json, urlencoded } = express;
 
-const headers = require("./config/headers");
 const apiRouter = require("./routes/api");
 const profileRouter = require("./routes/profile");
 const { errorHandler, notFound } = require("./middleware/errorHandler");

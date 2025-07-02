@@ -28,7 +28,10 @@ async function fetchImage(url) {
 
   const allowedDomain = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)*fbcdn\.net(\/.*)?$/;
   if (!allowedDomain.test(url)) {
-    throw Object.assign(new Error("Image URL must be from fbcdn.net or its subdomains"), { status: 400 });
+    throw Object.assign(
+      new Error("Image URL must be from fbcdn.net or its subdomains"),
+      { status: 400 },
+    );
   }
 
   const res = await fetch(url, {
@@ -183,8 +186,4 @@ async function fetchProfile(username) {
   return user;
 }
 
-<<<<<<< HEAD
 module.exports = { fetchImage, fetchPosts, fetchProfile, fetchComments };
-=======
-module.exports = { fetchImage, fetchPosts, fetchProfile };
->>>>>>> 264fecf350528d150211ca0fa7664b4efd6a1afc

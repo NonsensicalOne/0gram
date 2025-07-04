@@ -120,9 +120,42 @@ async function fetchComments(postId) {
 
 // Fetch full profile data
 async function fetchProfile(username) {
+  let userId;
+  let jazoest;
+
+  if (!userId) {
+    const page = await fetch(`https://www.instagram.com/${username}`, {
+      headers,
+    });
+    const html = await page.text();
+
+    const searchString = '"props":{"id":"';
+    const startIndex = html.indexOf(searchString);
+
+    if (startIndex !== -1) {
+      const valueStart = startIndex + searchString.length;
+      const valueEnd = html.indexOf('"', valueStart);
+      userId = html.substring(valueStart, valueEnd);
+    }
+
+    // Extract jazoest from the same HTML response
+    const jazoestSearchString = "jazoest=";
+    const jazoestStartIndex = html.indexOf(jazoestSearchString);
+
+    if (jazoestStartIndex !== -1) {
+      const jazoestValueStart = jazoestStartIndex + jazoestSearchString.length;
+      const jazoestValueEnd = html.indexOf("&", jazoestValueStart);
+      const jazoestEndIndex =
+        jazoestValueEnd !== -1
+          ? jazoestValueEnd
+          : html.indexOf('"', jazoestValueStart);
+      jazoest = html.substring(jazoestValueStart, jazoestEndIndex);
+    }
+  }
+
   const initialRes = await fetch("https://www.instagram.com/graphql/query", {
     headers: headers,
-    body: `av=17841475430069406&__d=www&__user=0&__a=1&__req=8&__hs=20265.HYP%3Ainstagram_web_pkg.2.1...0&dpr=3&__ccg=GOOD&__rev=1024220156&__s=mttwle%3A2pb3g0%3Ayqktjw&__hsi=7520308877564002949&__dyn=7xeUjG1mxu1syUbFp41twWwIxu13wvoKewSAwHwNw9G2S7o1g8hw2nVE4W0qa0FE2awgo9oO0n24oaEnxO1ywOwv89k2C1Fwc60D87u3ifK0EUjwGzEaE2iwNwmE2eUlwhEe87q0oa2-azo7u3vwDwHg2ZwrUdUbGwmk0zU8oC1Iwqo5p0OwUQp1yUb8jxKi2K7E5y4UrwHwcObyohw4rxO2Cq2K&__csr=gmMhhdjsaZ8t49T4Zk_tAWtGWHHFYGRbrHhdqiXBAgKhpTAVpFpaGl4z4vADAoDK8N0zBQHm44CiKidVHB8jLQ8hV8GahGQiKFlWzKiFEgBGaTBBmfxbK6Sagy2CUZr8UoGcByZByVlDDufyFoGfyJqJeq9h5xG48CicDgOi48ix2u7rAwSyo1cE01nA60O920mEg4yU9Q2C9BoOu11w4Qxne1Jo8rK1_yFA0IUaE4W0BO02o8660gu046E0ON0ywCU8i4yPwcG1N84k1tgf62ow8Ukg13k6ElP5Cw2xpBo24Rgqhk0kOm2egC7o5epe00AkE0kmw0Ddw&__hsdp=l0ZqugiyOT5PT2sTpygI4BUy9yGEy569jCwgEvhaboS4p2eKAEK42akSV8Gz5aldwqW9auAFoybU6y76ewhU98IGyobUhKbxOUC4pGw8up3h0d87y2bwWoN0i88aDByprx2i261qw9rwbe0g20TE12E1k8kwdy0J82_xC1Hwyw9S0EEG0Wtwio6e3G0wU9o6CibwAy3wQwRU76i2e0Io&__hblp=0lU5m1dxy4U3hgvwdu7E6K8x21pAG7oOfBwXGUy5FryoCuqAm5E6K4UC7EiwGw_CCwy8bwJpFlwhEmyo8bx2i263Hxum6Enwo-3m3C13wxwdW0w8lwhU3Rxi1EwMCwaOEN6wdy3u8wrF988E5m11xC1Hwyw9S0EEG1rw8To88a8K9wjoeE23Bx-7U4GWy899IV8qxiU8Ud8aE8p8pyo6i2ebxO&__comet_req=7&fb_dtsg=NAfsx5NycqI73lQUzHzE9pnLBuZJ_Oc_uSjVkHL-et-gvDUxAfOVK8w%3A17864642926059691%3A1750868749&jazoest=26434&lsd=C52AAM4eFRJdP0i3-4vxou&__spin_r=1024220156&__spin_b=trunk&__spin_t=${Math.floor(Date.now() / 1000)}&__crn=comet.igweb.PolarisProfilePostsTabRoute&fb_api_caller_class=RelayModern&fb_api_req_friendly_name=PolarisProfilePostsQuery&variables=%7B%22data%22%3A%7B%22count%22%3A12%2C%22include_reel_media_seen_timestamp%22%3Atrue%2C%22include_relationship_info%22%3Atrue%2C%22latest_besties_reel_media%22%3Atrue%2C%22latest_reel_media%22%3Atrue%7D%2C%22username%22%3A%22${username}%22%2C%22__relay_internal__pv__PolarisIsLoggedInrelayprovider%22%3Atrue%2C%22__relay_internal__pv__PolarisShareSheetV3relayprovider%22%3Atrue%7D&server_timestamps=true&doc_id=23905326119127169`,
+    body: `av=17841475430069406&__d=www&__user=0&__a=1&__req=8&__hs=20265.HYP%3Ainstagram_web_pkg.2.1...0&dpr=3&__ccg=GOOD&__rev=1024220156&__s=mttwle%3A2pb3g0%3Ayqktjw&__hsi=7520308877564002949&__dyn=7xeUjG1mxu1syUbFp41twWwIxu13wvoKewSAwHwNw9G2S7o1g8hw2nVE4W0qa0FE2awgo9oO0n24oaEnxO1ywOwv89k2C1Fwc60D87u3ifK0EUjwGzEaE2iwNwmE2eUlwhEe87q0oa2-azo7u3vwDwHg2ZwrUdUbGwmk0zU8oC1Iwqo5p0OwUQp1yUb8jxKi2K7E5y4UrwHwcObyohw4rxO2Cq2K&__csr=gmMhhdjsaZ8t49T4Zk_tAWtGWHHFYGRbrHhdqiXBAgKhpTAVpFpaGl4z4vADAoDK8N0zBQHm44CiKidVHB8jLQ8hV8GahGQiKFlWzKiFEgBGaTBBmfxbK6Sagy2CUZr8UoGcByZByVlDDufyFoGfyJqJeq9h5xG48CicDgOi48ix2u7rAwSyo1cE01nA60O920mEg4yU9Q2C9BoOu11w4Qxne1Jo8rK1_yFA0IUaE4W0BO02o8660gu046E0ON0ywCU8i4yPwcG1N84k1tgf62ow8Ukg13k6ElP5Cw2xpBo24Rgqhk0kOm2egC7o5epe00AkE0kmw0Ddw&__hsdp=l0ZqugiyOT5PT2sTpygI4BUy9yGEy569jCwgEvhaboS4p2eKAEK42akSV8Gz5aldwqW9auAFoybU6y76ewhU98IGyobUhKbxOUC4pGw8up3h0d87y2bwWoN0i88aDByprx2i261qw9rwbe0g20TE12E1k8kwdy0J82_xC1Hwyw9S0EEG0Wtwio6e3G0wU9o6CibwAy3wQwRU76i2e0Io&__hblp=0lU5m1dxy4U3hgvwdu7E6K8x21pAG7oOfBwXGUy5FryoCuqAm5E6K4UC7EiwGw_CCwy8bwJpFlwhEmyo8bx2i263Hxum6Enwo-3m3C13wxwdW0w8lwhU3Rxi1EwMCwaOEN6wdy3u8wrF988E5m11xC1Hwyw9S0EEG1rw8To88a8K9wjoeE23Bx-7U4GWy899IV8qxiU8Ud8aE8p8pyo6i2ebxO&__comet_req=7&fb_dtsg=NAfsx5NycqI73lQUzHzE9pnLBuZJ_Oc_uSjVkHL-et-gvDUxAfOVK8w%3A17864642926059691%3A1750868749&jazoest=${jazoest}&lsd=C52AAM4eFRJdP0i3-4vxou&__spin_r=1024220156&__spin_b=trunk&__spin_t=${Math.floor(Date.now() / 1000)}&__crn=comet.igweb.PolarisProfilePostsTabRoute&fb_api_caller_class=RelayModern&fb_api_req_friendly_name=PolarisProfilePostsQuery&variables=%7B%22data%22%3A%7B%22count%22%3A12%2C%22include_reel_media_seen_timestamp%22%3Atrue%2C%22include_relationship_info%22%3Atrue%2C%22latest_besties_reel_media%22%3Atrue%2C%22latest_reel_media%22%3Atrue%7D%2C%22username%22%3A%22${username}%22%2C%22__relay_internal__pv__PolarisIsLoggedInrelayprovider%22%3Atrue%2C%22__relay_internal__pv__PolarisShareSheetV3relayprovider%22%3Atrue%7D&server_timestamps=true&doc_id=23905326119127169`,
     method: "POST",
   });
   const initial = await initialRes.json();
@@ -138,26 +171,9 @@ async function fetchProfile(username) {
 
   let timeline =
     initial.data?.xdt_api__v1__feed__user_timeline_graphql_connection;
-  let userId =
+  userId =
     timeline?.edges?.[0]?.node?.user?.pk ||
     timeline?.edges?.[0]?.node?.owner?.pk;
-
-  // 2) Fallback: HTML scraping
-  if (!userId) {
-    const page = await fetch(`https://www.instagram.com/${username}`, {
-      headers,
-    });
-    const html = await page.text();
-
-    const searchString = '"props":{"id":"';
-    const startIndex = html.indexOf(searchString);
-
-    if (startIndex !== -1) {
-      const valueStart = startIndex + searchString.length;
-      const valueEnd = html.indexOf('"', valueStart);
-      userId = html.substring(valueStart, valueEnd);
-    }
-  }
 
   if (!userId)
     throw Object.assign(new Error("User not found"), { status: 404 });

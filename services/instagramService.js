@@ -2,6 +2,7 @@ const crypto = require("crypto");
 const fetch = require("undici").fetch;
 let headers = require("../config/headers");
 let lsd;
+let csrf;
 
 function setLsdHeader(lsd) {
   headers = { ...headers, "x-fb-lsd": lsd };
@@ -173,6 +174,18 @@ async function fetchProfile(username) {
           ? jazoestValueEnd
           : html.indexOf('"', jazoestValueStart);
       jazoest = html.substring(jazoestValueStart, jazoestEndIndex);
+    }
+
+    const csrfSearchString = '{"csrf_token":"';
+    const csrfStartIndex = html.indexOf(csrfSearchString);
+
+    if (csrfStartIndex !== -1) {
+      const csrfValueStart = csrfStartIndex + csrfSearchString.length;
+      const csrfValueEnd = html.indexOf('"', csrfValueStart);
+      const csrfEndIndex =
+        csrfValueEnd !== -1 ? csrfValueEnd : html.indexOf('"', csrfValueStart);
+      csrf = html.substring(csrfValueStart, csrfEndIndex);
+      headers = { ...headers, "x-csrftoken": csrf };
     }
   }
 

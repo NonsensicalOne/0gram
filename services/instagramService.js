@@ -1,4 +1,3 @@
-const crypto = require("crypto");
 const fetch = require("undici").fetch;
 let headers = require("../config/headers");
 let lsd;

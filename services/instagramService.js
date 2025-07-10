@@ -32,12 +32,22 @@ async function fetchImage(url) {
     throw Object.assign(new Error("Image URL required"), { status: 400 });
   }
 
-  const allowedDomain = /^(https?:\/\/)?([a-zA-Z0-9-]+\.)*fbcdn\.net(\/.*)?$/;
-  if (!allowedDomain.test(url)) {
-    throw Object.assign(
-      new Error("Image URL must be from fbcdn.net or its subdomains"),
-      { status: 400 },
+  // Validate allowed domains using a simple, efficient approach
+  const allowedHosts = ["fbcdn.net", "cdninstagram.com"];
+  try {
+    const { hostname } = new URL(url);
+    const isAllowed = allowedHosts.some(
+      (domain) => hostname === domain || hostname.endsWith(`.${domain}`),
     );
+
+    if (!isAllowed) {
+      console.log(url);
+      throw new Error(
+        "Image URL must be from fbcdn.net or cdninstagram.com or their subdomains",
+      );
+    }
+  } catch (err) {
+    throw Object.assign(new Error(err), { status: 400 });
   }
 
   const res = await fetch(url, {
